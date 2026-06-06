@@ -1,0 +1,185 @@
+app/actions/selections.ts
+  s_dbc60a78d3d799::t_cd2a43aca1e893 7,10
+  s_dbc60a78d3d799::t_694d80fd685f87 46-48
+  s_dbc60a78d3d799::t_899f15140e6730 57
+  s_dbc60a78d3d799::t_d7d3c5daddf525 1-6,8-9,11-45,49-56,58-80
+memory/MEMORY.md
+  s_dbc60a78d3d799::t_06edd472dab3f7 1-3
+mockups/4-aurora.html
+  s_dbc60a78d3d799::t_8526f8e5364ee2 1-120
+components/ui/badge.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-49
+components/ui/separator.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-28
+app/(auth)/layout.tsx
+  s_dbc60a78d3d799::t_2991b874109024 5,8,14
+  s_dbc60a78d3d799::t_42093312ec780a 1-2,6-7,9-11,13,15
+  s_dbc60a78d3d799::t_bf6786711276cf 3-4,12,16-18
+mockups/index.html
+  s_dbc60a78d3d799::t_c9d4f83a2042c5 1-60
+components/nav.tsx
+  s_dbc60a78d3d799::t_63a747cc968291 20
+  s_dbc60a78d3d799::t_1e6f74fe54269b 18,26
+  s_dbc60a78d3d799::t_39e144c8de62a9 1-17,19,21-25,27-32
+app/(owner)/layout.tsx
+  s_dbc60a78d3d799::t_8a55449acf3d58 1-23
+components/lists/list-form.tsx
+  s_dbc60a78d3d799::t_603bb01c7e6434 1-31,33-35,37-42,44-52,54-62,64-66,68-73,75-78
+  s_dbc60a78d3d799::t_af8cccee087659 32,36,43,53,63,67,74
+components/guest/selection-form.tsx
+  s_dbc60a78d3d799::t_5f064e14790992 232
+  s_dbc60a78d3d799::t_d9e7b5d771690d 35
+  s_dbc60a78d3d799::t_7f07f4526f2c1c 129-130,133,135-136,138-141,143
+  s_dbc60a78d3d799::t_5e37e54706e1a5 1-16,19-25,36-45,50,58,60,64-71,73,77,79-91,93-97,109,160-161,212,281,302-304
+  s_dbc60a78d3d799::t_0c916c04b1182e 219-220
+  s_dbc60a78d3d799::t_922c0b6a9065a0 52,54,57
+  s_dbc60a78d3d799::t_ae1b63916659b0 49
+  s_dbc60a78d3d799::t_4c8a4b5693cc3e 291-296
+  s_dbc60a78d3d799::t_75382273f99907 17-18,26-34,46-48,51,53,55-56,59,61-63,72,74-76,78,92,98-101,104,107-108,110-128,131-132,134,137,142,144-159,162-188,190,192-197,199-202,204-211,213-218,221-231,233-280,282-290,297-301
+  s_dbc60a78d3d799::t_f21750a0839453 102-103,105-106
+  s_dbc60a78d3d799::t_33b507399b27b2 189,191,198,203
+components/ui/button.tsx
+  s_dbc60a78d3d799::t_bd82faa4237026 1-67
+app/(owner)/lists/[listId]/page.tsx
+  s_dbc60a78d3d799::t_7f130eea96d44a 164,177,180,187,193,195
+  s_dbc60a78d3d799::t_120d577efff1c0 1-78,80-82,84,86-92,94-103,105-113,115-124,126-132,134-135,137-143,145-163,165-176,178-179,181-186,188-192,194,196-208
+  s_dbc60a78d3d799::t_7edcaa0279066b 79,85,93
+  s_dbc60a78d3d799::t_c10e4d216e6646 104,114,125
+  s_dbc60a78d3d799::t_e22647d9cb4d90 133,144
+  s_dbc60a78d3d799::t_a02ef4c3a7c29f 83
+app/layout.tsx
+  s_dbc60a78d3d799::t_33b496187a4cb9 7,19,21-25,35
+  s_dbc60a78d3d799::t_597220ecc69aef 1,3-4,8,10-15,26-31,38-43
+  s_dbc60a78d3d799::t_37dd377267eff6 36
+  s_dbc60a78d3d799::t_84f0b21126aa71 2,6,9,17-18,20
+app/globals.css
+  s_dbc60a78d3d799::t_bd82faa4237026 2-10,15-53,89-132,155
+  s_dbc60a78d3d799::t_2680a9641eb5d0 12-14
+  s_dbc60a78d3d799::t_fe33fdef446989 54-86
+  s_dbc60a78d3d799::t_1e9e2f7eb7e426 133-154
+app/(owner)/lists/[listId]/edit/page.tsx
+  s_dbc60a78d3d799::t_7076c71d293641 38
+  s_dbc60a78d3d799::t_4df6b2ea021001 34,44
+  s_dbc60a78d3d799::t_9f7fe1fe3c14d8 1-33,35-37,39-43,45-48
+components/auth/login-form.tsx
+  s_dbc60a78d3d799::t_02f5e9ed84e682 1-22,27-35,37-40,42-47,49-52,54-66,68-69,71,73-79
+  s_dbc60a78d3d799::t_c3329c8999a73b 23-26,36,41,48,53,67,70,72
+components/ui/alert.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-76
+components/ui/textarea.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-18
+mockups/2-editorial.html
+  s_dbc60a78d3d799::t_ae9c0129321e8e 1-111
+components/auth/forgot-password-form.tsx
+  s_dbc60a78d3d799::t_d0c6921300b7a2 1-22,26,28-42,44-47,49-55,57-61,63-68
+  s_dbc60a78d3d799::t_a54cf3135b4bf9 23-25,27,43,48,56,62
+lib/types.ts
+  s_dbc60a78d3d799::t_ffb294a56e4dfd 1-44
+app/actions/lists.ts
+  s_dbc60a78d3d799::t_006530784766df 1-9,11-55,57-96
+  s_dbc60a78d3d799::t_2a4c5095c76722 10
+  s_dbc60a78d3d799::t_0b1714c47ee7c6 56
+components/ui/input.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-19
+supabase/migration_002_short_slug.sql
+  s_dbc60a78d3d799::t_576ed29a4de9e3 1-27
+app/page.tsx
+  s_dbc60a78d3d799::t_cb778c52e9217f 1-11
+mockups/1-botanico.html
+  s_dbc60a78d3d799::t_62746611e2d649 1-173
+components/ui/sonner.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-49
+app/actions/auth.ts
+  s_dbc60a78d3d799::t_c4216ed05ad624 9-10,14-15,34,65,74
+  s_dbc60a78d3d799::t_72816aabc1d2bc 1-8,11-13,16-33,35-64,66-73,75-81
+supabase/schema.sql
+  s_dbc60a78d3d799::t_dac10de6e78779 1-3,29-37,39-152
+  s_dbc60a78d3d799::t_de813a8c6bf865 38
+  s_dbc60a78d3d799::t_1ab984a5bf9a5d 4-28
+components/ui/label.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-24
+lib/utils.ts
+  s_dbc60a78d3d799::t_bd82faa4237026 1-6
+lib/supabase/client.ts
+  s_dbc60a78d3d799::t_a9232ed2ea0f71 1-8
+mockups/3-manuscrito.html
+  s_dbc60a78d3d799::t_f3cd86cf9d6cf4 1-130
+app/(auth)/forgot-password/page.tsx
+  s_dbc60a78d3d799::t_dc4606397b753c 1-5
+components/ui/card.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-103
+next.config.ts
+  s_dbc60a78d3d799::t_bec4c292f64b41 4-10
+app/actions/gifts.ts
+  s_dbc60a78d3d799::t_6a52d7d07a428e 1-8,10,13-14,17-32,34-63,65-72,74-94,96-110,112-158
+  s_dbc60a78d3d799::t_6a01dcde8b42e3 9,11-12,15-16
+  s_dbc60a78d3d799::t_50efc0b57414f5 33
+  s_dbc60a78d3d799::t_5ca0f77f888758 111
+  s_dbc60a78d3d799::t_800757e73acc5b 64
+  s_dbc60a78d3d799::t_f48e7cf7cad41d 73
+  s_dbc60a78d3d799::t_4116f3e6cf082c 95
+memory/project_listaideal.md
+  s_dbc60a78d3d799::t_46c7422ca6041a 1-14,23-37
+  s_dbc60a78d3d799::t_2587abfca053ee 15-22
+components/auth/register-form.tsx
+  s_dbc60a78d3d799::t_4c9b208e44b6e4 23-26,36,41,47,53,60,63,65
+  s_dbc60a78d3d799::t_e484eefe1bec16 1-22,27-35,37-40,42-46,48-52,54-59,61-62,64,66-72
+app/(auth)/register/page.tsx
+  s_dbc60a78d3d799::t_84f825f113536c 1-5
+lib/supabase/server.ts
+  s_dbc60a78d3d799::t_227a9f03089767 1-34
+components/lists/copy-link.tsx
+  s_dbc60a78d3d799::t_21499748e993d6 1-19,21-24
+  s_dbc60a78d3d799::t_ba88d36cab5eea 20
+app/list/[token]/page.tsx
+  s_dbc60a78d3d799::t_867f761bf1b17d 1-45,47-48,51,53,56,59-60,66,76,80,82,91-94,98,100-108
+  s_dbc60a78d3d799::t_65c1045192122f 49,52,54,63,70-71,77,83-90
+  s_dbc60a78d3d799::t_0fc20d8a0928ea 46,50,55,57-58,61-62,64-65,67-69,72-75,78-79,81,95-97,99
+app/(owner)/lists/new/page.tsx
+  s_dbc60a78d3d799::t_018ccb9b4b7c1b 10-11,17,20
+  s_dbc60a78d3d799::t_0ba7a3838240e5 1-9,12-14,16,18-19,21-23
+  s_dbc60a78d3d799::t_397f7afdef2fc6 15
+package.json
+  s_dbc60a78d3d799::t_ba6bedf2716f5d 12-13,21,26
+  s_dbc60a78d3d799::t_bd82faa4237026 14-16,19,22,24-25
+  s_dbc60a78d3d799::t_14bb133f185935 18,23
+proxy.ts
+  s_dbc60a78d3d799::t_5f9ab5c92cd4f0 4
+components/gifts/gift-row.tsx
+  s_dbc60a78d3d799::t_d2222657d0d32b 49
+  s_dbc60a78d3d799::t_f223422041f9a0 104
+  s_dbc60a78d3d799::t_0344f47896f9a4 59,69
+  s_dbc60a78d3d799::t_cac5dd7f332d25 1-48,50-58,60-68,70-98,100-103,105-124,126-131
+  s_dbc60a78d3d799::t_fbccfa8e97e31a 125
+  s_dbc60a78d3d799::t_f7510a46d477e1 99
+components/gifts/gift-form.tsx
+  s_dbc60a78d3d799::t_b17c689afb2545 44,48,55,59,66,78,89,94,101
+  s_dbc60a78d3d799::t_379d000faa14e6 1-43,45-47,49-54,56-58,60-65,67-77,79-88,90-93,95-100,102-105
+components.json
+  s_dbc60a78d3d799::t_bd82faa4237026 1-25
+app/(owner)/dashboard/page.tsx
+  s_dbc60a78d3d799::t_ec7110f2bc85be 86
+  s_dbc60a78d3d799::t_f4e52c1daa7108 58-59
+  s_dbc60a78d3d799::t_601c93b7bcb3c2 55-56,60,64,69-71,73,78,80-83,87-88,90,98,100,105,107,116
+  s_dbc60a78d3d799::t_6291d48511b32f 1-54,57,61-63,65-68,72,74-77,79,84-85,89,91-97,99,101-104,106,108-115,117-125
+components/ui/dialog.tsx
+  s_dbc60a78d3d799::t_14bb133f185935 1-168
+app/(auth)/login/page.tsx
+  s_dbc60a78d3d799::t_df283163770d71 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "2d2787ee84a2c0a19cb09466bc87ec007f7bf834",
+  "prompts": {},
+  "sessions": {
+    "s_dbc60a78d3d799": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75279f22-bfe9-4707-9e90-7216c90fdfa0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "ksampaqueiro_meli <kluivert.queiroz@mercadolivre.com>"
+    }
+  }
+}

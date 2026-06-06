@@ -1,0 +1,34 @@
+supabase/schema.sql
+  s_fd33f536164cbd::t_861ee46fa43277 50
+components/guest/selection-form.tsx
+  s_fd33f536164cbd::t_65e3967e4ae265 170-174
+components/gifts/gift-row.tsx
+  s_fd33f536164cbd::t_deb87fdf934486 60-62
+supabase/migration_003_price.sql
+  s_fd33f536164cbd::t_85f7a059c219aa 1-2
+app/actions/gifts.ts
+  s_fd33f536164cbd::t_499d3955fe6e6f 86
+  s_fd33f536164cbd::t_67fdc90025ed07 13-16
+  s_fd33f536164cbd::t_c6dadbcaa5244c 44,62
+  s_fd33f536164cbd::t_915756eeb6e0c3 112
+lib/types.ts
+  s_fd33f536164cbd::t_c44771f82307bd 20
+components/gifts/gift-form.tsx
+  s_fd33f536164cbd::t_09a21865d2bfff 78-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "29ffdeaf71c8f392c3bf5d02af64dc0deed135b8",
+  "prompts": {},
+  "sessions": {
+    "s_fd33f536164cbd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "628bf060-edf8-4b41-bf33-d7a0d68f0170",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "kluivert-queiroz <kluivert.queiroz@hotmail.com>"
+    }
+  }
+}

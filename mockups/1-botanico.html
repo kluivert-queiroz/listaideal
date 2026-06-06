@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mockup · Romântico Botânico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Mulish:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --cream:#FAF7F2;
+    --cream-2:#F3EEE4;
+    --ink:#3E352B;
+    --muted:#8A7F70;
+    --sage:#7D9471;
+    --sage-deep:#5E7456;
+    --terra:#C08457;
+    --line:#E2D9C9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Mulish',sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    background-image:radial-gradient(circle at 20% 0%, #fff 0%, transparent 40%),
+                     radial-gradient(circle at 100% 100%, #F0EADD 0%, transparent 45%);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 140px}
+
+  /* ── Header com folhagem ── */
+  header{position:relative;text-align:center;padding:72px 0 28px}
+  .sprig{position:absolute;top:24px;width:120px;opacity:.85}
+  .sprig.left{left:-10px;transform:scaleX(-1)}
+  .sprig.right{right:-10px}
+  .date{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:18px}
+  .names{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:60px;line-height:1.05;color:var(--ink)}
+  .amp{color:var(--terra);font-style:italic}
+  .subtitle{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+  .intro{max-width:48ch;margin:22px auto 0;color:var(--muted);font-size:15.5px}
+
+  /* ornamento divisor */
+  .divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:38px 0 30px;color:var(--sage)}
+  .divider::before,.divider::after{content:"";height:1px;width:70px;background:var(--line)}
+
+  h2.section{font-family:'Cormorant Garamond',serif;font-size:30px;text-align:center;font-weight:600}
+  .section-sub{text-align:center;color:var(--muted);font-size:14px;margin:4px 0 30px}
+
+  /* ── Grid de presentes ── */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .card{
+    position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(125,148,113,.55);
+    transition:transform .25s ease, box-shadow .25s ease;cursor:pointer;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 22px 40px -18px rgba(125,148,113,.7)}
+  .card .img{height:180px;background-size:cover;background-position:center}
+  .card .body{padding:16px 18px 18px}
+  .card h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;line-height:1.2}
+  .card p{font-size:13.5px;color:var(--muted);margin-top:4px}
+  .card a{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--sage-deep);text-decoration:none;border-bottom:1px solid transparent}
+  .card a:hover{border-color:var(--sage)}
+
+  .check{
+    position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+    border:2px solid #fff;background:rgba(62,53,43,.25);color:transparent;backdrop-filter:blur(2px);
+  }
+  .card.selected{border-color:var(--sage);box-shadow:0 0 0 2px var(--sage),0 18px 36px -18px rgba(94,116,86,.7)}
+  .card.selected .check{background:var(--sage-deep);border-color:#fff;color:#fff}
+
+  /* ── Barra inferior ── */
+  .bar{
+    position:fixed;left:0;right:0;bottom:0;background:rgba(250,247,242,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+  }
+  .bar .inner{max-width:720px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+  .bar span{color:var(--muted);font-size:14px}
+  .btn{
+    background:var(--sage-deep);color:#fff;border:none;padding:13px 28px;border-radius:999px;
+    font-family:'Mulish';font-weight:600;font-size:15px;cursor:pointer;letter-spacing:.02em;
+    box-shadow:0 10px 20px -8px rgba(94,116,86,.7);transition:background .2s
+  }
+  .btn:hover{background:#52673f}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}.names{font-size:44px}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg class="sprig left" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 158C60 110 40 70 12 40" stroke="#7D9471" stroke-width="2"/>
+        <g fill="#8AA67C">
+          <ellipse cx="30" cy="60" rx="16" ry="7" transform="rotate(-40 30 60)"/>
+          <ellipse cx="44" cy="92" rx="16" ry="7" transform="rotate(-25 44 92)"/>
+          <ellipse cx="52" cy="124" rx="15" ry="6.5" transform="rotate(-12 52 124)"/>
+          <ellipse cx="22" cy="44" rx="13" ry="6" transform="rotate(-55 22 44)"/>
+        </g>
+        <circle cx="14" cy="38" r="5" fill="#C08457"/>
+      </svg>
+      <svg class="sprig right" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 158C60 110 40 70 12 40" stroke="#7D9471" stroke-width="2"/>
+        <g fill="#8AA67C">
+          <ellipse cx="30" cy="60" rx="16" ry="7" transform="rotate(-40 30 60)"/>
+          <ellipse cx="44" cy="92" rx="16" ry="7" transform="rotate(-25 44 92)"/>
+          <ellipse cx="52" cy="124" rx="15" ry="6.5" transform="rotate(-12 52 124)"/>
+          <ellipse cx="22" cy="44" rx="13" ry="6" transform="rotate(-55 22 44)"/>
+        </g>
+        <circle cx="14" cy="38" r="5" fill="#C08457"/>
+      </svg>
+
+      <div class="date">15 de Novembro de 2026</div>
+      <h1 class="names">Ana <span class="amp">&amp;</span> Bruno</h1>
+      <div class="subtitle">Lista de Presentes</div>
+      <p class="intro">Estamos muito felizes por você fazer parte deste momento.
+        Escolha um presentinho com carinho — o que importa de verdade é a sua presença.</p>
+    </header>
+
+    <div class="divider">❧</div>
+
+    <h2 class="section">Escolha seus presentes</h2>
+    <p class="section-sub">Selecione um ou mais presentes para o casal</p>
+
+    <div class="grid">
+      <div class="card selected">
+        <div class="check">✓</div>
+        <div class="img" style="background-image:url('https://picsum.photos/seed/panelas/600/400')"></div>
+        <div class="body">
+          <h3>Jogo de Panelas</h3>
+          <p>Antiaderente, 5 peças — para os jantares em casa.</p>
+          <a href="#">Ver item →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="check">✓</div>
+        <div class="img" style="background-image:url('https://picsum.photos/seed/mixer/600/400')"></div>
+        <div class="body">
+          <h3>Batedeira Planetária</h3>
+          <p>Para os bolos de domingo de manhã.</p>
+          <a href="#">Ver item →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="check">✓</div>
+        <div class="img" style="background-image:url('https://picsum.photos/seed/tacas/600/400')"></div>
+        <div class="body">
+          <h3>Taças de Cristal</h3>
+          <p>Conjunto com 6 — para brindar a vida a dois.</p>
+          <a href="#">Ver item →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="check">✓</div>
+        <div class="img" style="background-image:url('https://picsum.photos/seed/cafe/600/400')"></div>
+        <div class="body">
+          <h3>Cafeteira Italiana</h3>
+          <p>Aquele café especial das manhãs.</p>
+          <a href="#">Ver item →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="inner">
+      <span>1 presente selecionado</span>
+      <button class="btn">Continuar</button>
+    </div>
+  </div>
+</body>
+</html>

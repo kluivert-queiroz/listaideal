@@ -10,6 +10,10 @@ const giftSchema = z.object({
   description: z.string().max(1000).optional(),
   image_url: z.string().url('A imagem deve ser uma URL válida.').or(z.literal('')).optional(),
   store_url: z.string().url('O link da loja deve ser uma URL válida.').or(z.literal('')).optional(),
+  price: z.coerce
+    .number()
+    .positive('O preço deve ser maior que zero.')
+    .optional(),
   max_count: z.coerce
     .number()
     .int('A quantidade máxima deve ser um número inteiro.')
@@ -37,6 +41,7 @@ export async function createGiftAction(
     description: formData.get('description') || undefined,
     image_url: formData.get('image_url') || undefined,
     store_url: formData.get('store_url') || undefined,
+    price: formData.get('price') || undefined,
     max_count: formData.get('max_count'),
   })
 
@@ -54,6 +59,7 @@ export async function createGiftAction(
     ...parsed.data,
     image_url: parsed.data.image_url || null,
     store_url: parsed.data.store_url || null,
+    price: parsed.data.price ?? null,
     list_id: listId,
     display_order: (count ?? 0) + 1,
   })
@@ -77,6 +83,7 @@ export async function updateGiftAction(
     description: formData.get('description') || undefined,
     image_url: formData.get('image_url') || undefined,
     store_url: formData.get('store_url') || undefined,
+    price: formData.get('price') || undefined,
     max_count: formData.get('max_count'),
   })
 
@@ -102,6 +109,7 @@ export async function updateGiftAction(
       ...parsed.data,
       image_url: parsed.data.image_url || null,
       store_url: parsed.data.store_url || null,
+      price: parsed.data.price ?? null,
     })
     .eq('id', giftId)
 

@@ -75,6 +75,19 @@ export function GiftForm({ action, listId, gift, onSuccess }: Props) {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="price">Preço (opcional)</Label>
+          <Input
+            id="price"
+            name="price"
+            type="number"
+            min={0.01}
+            step={0.01}
+            placeholder="0,00"
+            defaultValue={gift?.price ?? ''}
+          />
+        </div>
+
+        <div className="col-span-2 space-y-2">
           <Label htmlFor="image_url">URL da imagem</Label>
           <Input
             id="image_url"

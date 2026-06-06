@@ -17,6 +17,7 @@ export type Gift = {
   description: string | null
   image_url: string | null
   store_url: string | null
+  price: number | null
   max_count: number
   display_order: number
   created_at: string

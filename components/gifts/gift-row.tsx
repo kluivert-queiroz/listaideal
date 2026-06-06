@@ -57,6 +57,9 @@ export function GiftRow({
         )}
         <p className="text-xs text-muted-foreground mt-1">
           {gift.slots_used} / {gift.max_count} escolhidos
+          {gift.price != null && (
+            <> · {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}</>
+          )}
           {gift.store_url && (
             <>
               {' · '}

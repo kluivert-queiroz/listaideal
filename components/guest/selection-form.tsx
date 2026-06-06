@@ -167,6 +167,11 @@ export function SelectionForm({ gifts, listToken }: Props) {
                           {gift.description}
                         </p>
                       )}
+                      {gift.price != null && (
+                        <p className="text-sm font-medium text-foreground">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}
+                        </p>
+                      )}
                       {gift.store_url && (
                         <a
                           href={gift.store_url}

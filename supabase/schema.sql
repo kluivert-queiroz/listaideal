@@ -47,6 +47,7 @@ create table if not exists public.gifts (
   description   text,
   image_url     text,
   store_url     text,
+  price         numeric(10,2),
   max_count     integer     not null default 1 check (max_count >= 1),
   display_order integer     not null default 0,
   created_at    timestamptz not null default now()

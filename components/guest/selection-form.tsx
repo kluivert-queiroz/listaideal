@@ -144,11 +144,12 @@ export function SelectionForm({ gifts, listToken }: Props) {
                     </span>
 
                     {gift.image_url ? (
-                      <div className="relative h-44 w-full bg-muted">
+                      <div className="relative h-44 w-full bg-white">
                         <Image
                           src={gift.image_url}
                           alt={gift.name}
                           fill
+                          objectFit="contain"
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
                           sizes="(min-width: 640px) 50vw, 100vw"
                         />

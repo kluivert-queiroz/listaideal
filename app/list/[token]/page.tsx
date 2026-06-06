@@ -73,11 +73,6 @@ export default async function GuestListPage({
           >
             {list.title}
           </p>
-          {list.intro_message && (
-            <p className="max-w-prose mx-auto text-foreground/80 italic leading-relaxed whitespace-pre-wrap pt-3">
-              {list.intro_message}
-            </p>
-          )}
         </header>
 
         {/* Heart divider */}
@@ -88,6 +83,23 @@ export default async function GuestListPage({
           </svg>
           <span className="h-px w-16 bg-[#ebc4c4]" />
         </div>
+        <div>
+          {list.intro_message && (
+            <>
+              <p className="max-w-prose mx-auto text-foreground/80 italic leading-relaxed whitespace-pre-wrap pt-3">
+                {list.intro_message}
+              </p>
+              <div className="my-10 flex items-center justify-center" aria-hidden="true">
+                <span className="h-px w-16 bg-[#ebc4c4]" />
+                <svg viewBox="0 0 24 24" className="mx-3 h-5 w-5 fill-[#d98e8e]">
+                  <path d="M12 18s-8-5.2-8-10.2A4 4 0 0112 5a4 4 0 018 2.8C20 12.8 12 18 12 18z" />
+                </svg>
+                <span className="h-px w-16 bg-[#ebc4c4]" />
+              </div>
+            </>
+          )}
+        </div>
+
 
         {/* Closed state */}
         {list.status === 'closed' ? (

@@ -3,12 +3,32 @@
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/server'
+import { getAuthenticatedUser, assertListOwnership } from '@/lib/auth-guards'
 import { sanitizeUserText } from '@/lib/text'
-import { RSVP_MAX_GUEST_COUNT, RSVP_MIN_GUEST_COUNT } from '@/lib/rsvp'
+import {
+  RSVP_DUPLICATE_NAME_ERROR,
+  RSVP_MAX_GUEST_COUNT,
+  RSVP_MIN_GUEST_COUNT,
+  RSVP_UPDATED_SUCCESS,
+} from '@/lib/rsvp'
+import type { ActionState } from '@/lib/types'
+
+const UNIQUE_VIOLATION = '23505'
 
 const rsvpSchema = z.object({
   guest_name: z.string().trim().min(1, 'Seu nome é obrigatório.').max(200),
   list_token: z.string().min(1),
+  is_attending: z.enum(['yes', 'no']),
+  guest_count: z.coerce
+    .number()
+    .int()
+    .min(RSVP_MIN_GUEST_COUNT)
+    .max(RSVP_MAX_GUEST_COUNT)
+    .optional(),
+})
+
+const ownerRsvpSchema = z.object({
+  guest_name: z.string().trim().min(1, 'O nome do convidado é obrigatório.').max(200),
   is_attending: z.enum(['yes', 'no']),
   guest_count: z.coerce
     .number()
@@ -81,4 +101,65 @@ export async function submitRsvpAction(
     is_attending: data.is_attending,
     guest_count: data.guest_count,
   }
+}
+
+export async function updateRsvpAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const rsvpId = formData.get('rsvp_id') as string
+  const listId = formData.get('list_id') as string
+  if (!rsvpId || !listId) return { error: 'IDs ausentes.' }
+
+  const parsed = ownerRsvpSchema.safeParse({
+    guest_name: formData.get('guest_name'),
+    is_attending: formData.get('is_attending'),
+    guest_count: formData.get('guest_count') || undefined,
+  })
+
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  const is_attending = parsed.data.is_attending === 'yes'
+  if (is_attending && parsed.data.guest_count == null) {
+    return { error: 'Informe quantas pessoas confirmam.' }
+  }
+
+  const { supabase, user } = await getAuthenticatedUser()
+
+  if (!(await assertListOwnership(supabase, listId, user.id))) {
+    return { error: 'Lista não encontrada.' }
+  }
+
+  const guest_name = sanitizeUserText(parsed.data.guest_name)
+  const guest_count = is_attending ? parsed.data.guest_count! : 0
+
+  // No DB trigger stamps updated_at on this table — upsert_rsvp() sets it
+  // manually inside its own ON CONFLICT clause, so this owner path must too.
+  const { error } = await supabase
+    .from('rsvps')
+    .update({ guest_name, is_attending, guest_count, updated_at: new Date().toISOString() })
+    .eq('id', rsvpId)
+    .eq('list_id', listId)
+
+  if (error) {
+    if (error.code === UNIQUE_VIOLATION) return { error: RSVP_DUPLICATE_NAME_ERROR }
+    return { error: error.message }
+  }
+
+  revalidatePath(`/lists/${listId}`)
+  return { success: RSVP_UPDATED_SUCCESS }
+}
+
+export async function deleteRsvpAction(formData: FormData) {
+  const rsvpId = formData.get('rsvp_id') as string
+  const listId = formData.get('list_id') as string
+  if (!rsvpId || !listId) return
+
+  const { supabase, user } = await getAuthenticatedUser()
+
+  if (!(await assertListOwnership(supabase, listId, user.id))) return
+
+  await supabase.from('rsvps').delete().eq('id', rsvpId).eq('list_id', listId)
+
+  revalidatePath(`/lists/${listId}`)
 }

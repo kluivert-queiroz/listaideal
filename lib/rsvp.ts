@@ -8,6 +8,17 @@ export const RSVP_SUBMIT_LABEL = 'Confirmar'
 export const RSVP_SUBMIT_PENDING_LABEL = 'Enviando…'
 export const RSVP_EMPTY_OWNER = 'Nenhuma confirmação ainda.'
 
+export const RSVP_EDIT_TITLE = 'Editar RSVP'
+export const RSVP_EDIT_SAVE_LABEL = 'Salvar alterações'
+export const RSVP_EDIT_SAVE_PENDING_LABEL = 'Salvando…'
+export const RSVP_DELETE_LABEL = 'Excluir'
+export const RSVP_UPDATED_SUCCESS = 'RSVP atualizado.'
+export const RSVP_DUPLICATE_NAME_ERROR = 'Já existe uma confirmação com esse nome.'
+
+export function rsvpDeleteConfirm(guestName: string): string {
+  return `Excluir a confirmação de ${guestName}? Essa ação não pode ser desfeita.`
+}
+
 export const RSVP_MIN_GUEST_COUNT = 1
 export const RSVP_MAX_GUEST_COUNT = 20
 

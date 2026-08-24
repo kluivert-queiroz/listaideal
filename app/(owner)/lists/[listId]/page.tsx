@@ -8,6 +8,7 @@ import {
 import { createGiftAction } from '@/app/actions/gifts'
 import { toggleMessageVisibilityAction } from '@/app/actions/messages'
 import { GiftRow } from '@/components/gifts/gift-row'
+import { RsvpRow } from '@/components/rsvps/rsvp-row'
 import { GiftForm } from '@/components/gifts/gift-form'
 import { CategoryManager } from '@/components/categories/category-manager'
 import { CopyLink } from '@/components/lists/copy-link'
@@ -207,30 +208,7 @@ export default async function ListPage({
             <Card>
               <CardContent className="divide-y p-0">
                 {rsvps.map((r) => (
-                  <div
-                    key={r.id}
-                    className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm"
-                  >
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium">{r.guest_name}</span>
-                      <Badge variant={r.is_attending ? 'default' : 'secondary'}>
-                        {r.is_attending ? 'Sim' : 'Não'}
-                      </Badge>
-                      {r.is_attending && (
-                        <span className="text-muted-foreground">
-                          {r.guest_count} {r.guest_count === 1 ? 'pessoa' : 'pessoas'}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(r.updated_at).toLocaleDateString('pt-BR', {
-                        day: 'numeric',
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
-                  </div>
+                  <RsvpRow key={r.id} rsvp={r} listId={listId} />
                 ))}
               </CardContent>
             </Card>

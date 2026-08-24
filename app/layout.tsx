@@ -27,8 +27,8 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: 'ListaIdeal — Lista de Presentes de Casamento',
-  description: 'Crie e compartilhe sua lista de presentes de casamento.',
+  title: 'ListaIdeal — Lista de Presentes',
+  description: 'Crie e compartilhe sua lista de presentes.',
 }
 
 export default function RootLayout({

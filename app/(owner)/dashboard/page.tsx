@@ -57,7 +57,7 @@ export default async function DashboardPage() {
         <div>
           <h1 className="font-script text-5xl text-primary leading-none">Minhas Listas</h1>
           <p className="text-muted-foreground text-sm mt-2">
-            Gerencie suas listas de presentes de casamento
+            Gerencie suas listas de presentes
           </p>
         </div>
         <Button asChild>

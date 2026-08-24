@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </Link>
       <div className="w-full max-w-sm">{children}</div>
       <p className="mt-8 text-xs text-muted-foreground">
-        Sua lista de presentes de casamento, com todo o carinho.
+        Sua lista de presentes
       </p>
     </div>
   )

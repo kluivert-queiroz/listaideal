@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { groupGiftsIntoSections } from '@/lib/gift-sections'
 import { MESSAGES_EMPTY_OWNER, MESSAGES_TITLE } from '@/lib/messages'
+import { getSiteUrl } from '@/lib/utils'
 import type { GiftWithSlots, SelectionWithGift, ListMessage } from '@/lib/types'
 
 export default async function ListPage({
@@ -95,7 +96,7 @@ export default async function ListPage({
     .eq('list_id', listId)
     .order('created_at', { ascending: false })
 
-  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/list/${list.share_token}`
+  const shareUrl = `${getSiteUrl()}/list/${list.share_token}`
 
   return (
     <div className="space-y-8">

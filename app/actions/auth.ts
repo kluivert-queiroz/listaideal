@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { getSiteUrl } from '@/lib/utils'
 import type { ActionState } from '@/lib/types'
 
 const loginSchema = z.object({
@@ -66,7 +67,7 @@ export async function forgotPasswordAction(
 
   const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/update-password`,
+    redirectTo: `${getSiteUrl()}/update-password`,
   })
 
   if (error) return { error: error.message }

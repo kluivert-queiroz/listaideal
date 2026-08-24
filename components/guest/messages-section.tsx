@@ -45,7 +45,7 @@ export function MessagesSection({ messages, total }: Props) {
     <section aria-labelledby="mensagens-de-carinho" className="space-y-6">
       <h2
         id="mensagens-de-carinho"
-        className="font-script text-4xl leading-none text-primary text-center"
+        className="font-script text-[2.9rem] leading-none text-script-ink text-center"
       >
         {MESSAGES_TITLE}
       </h2>

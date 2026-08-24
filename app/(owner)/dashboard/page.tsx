@@ -90,8 +90,8 @@ export default async function DashboardPage() {
                     {list.status === 'open' ? 'aberta' : 'fechada'}
                   </Badge>
                 </div>
-                {list.couple_names && (
-                  <CardDescription>{list.couple_names}</CardDescription>
+                {list.honoree_names && (
+                  <CardDescription>{list.honoree_names}</CardDescription>
                 )}
               </CardHeader>
               <CardContent className="text-sm text-muted-foreground flex-1">

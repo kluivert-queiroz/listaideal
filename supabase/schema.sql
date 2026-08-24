@@ -29,15 +29,21 @@ $$;
 -- ── Tables ──────────────────────────────────────────────────────────────────
 
 create table if not exists public.lists (
-  id           uuid        primary key default gen_random_uuid(),
-  owner_id     uuid        not null references auth.users(id) on delete cascade,
-  title        text        not null,
-  couple_names text,
+  id            uuid        primary key default gen_random_uuid(),
+  owner_id      uuid        not null references auth.users(id) on delete cascade,
+  title         text        not null,
+  honoree_names text,                 -- antes couple_names: nome da homenageada/bebê
+  headline      text        check (headline is null or char_length(headline) <= 160),
+  kicker        text        check (kicker is null or char_length(kicker) <= 120),
   intro_message text,
-  event_date   date,
-  share_token  text        not null unique default gen_slug(),
-  status       text        not null default 'open' check (status in ('open', 'closed')),
-  created_at   timestamptz not null default now()
+  event_date    date,
+  event_time    time,
+  venue_name    text        check (venue_name is null or char_length(venue_name) <= 160),
+  venue_address text        check (venue_address is null or char_length(venue_address) <= 200),
+  venue_city    text        check (venue_city is null or char_length(venue_city) <= 120),
+  share_token   text        not null unique default gen_slug(),
+  status        text        not null default 'open' check (status in ('open', 'closed')),
+  created_at    timestamptz not null default now()
 );
 
 create table if not exists public.gift_categories (

@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mockup — Página do convidado · Chá de bebê (tema mel & abelhinha)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@500;600&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ─────────────────────────────────────────────────────────────────────────
+     Tokens — paleta Harvest (globals.css) + 3 novos tokens propostos para o
+     tema "chá de bebê": fundo branco, tinta quente e verdes da folhagem.
+     ───────────────────────────────────────────────────────────────────────── */
+  :root {
+    --background: #ffffff;        /* pedido: fundo branco (era Vanilla Linen) */
+    --card: #ffffff;
+    --foreground: #4b4636;        /* NOVO: tinta quente (marrom-oliva do convite) */
+    --primary: #4f583b;           /* Olive Grove */
+    --primary-foreground: #f8f4e8;
+    --secondary: #ead7b2;         /* Honey Wheat */
+    --muted: #faf6ec;
+    --muted-foreground: #6b7355;
+    --accent: #fbebc8;
+    --border: #ece3cd;
+    --ring: #9c6f1f;
+    --decor: #d9a450;             /* Amber Harvest — abelhas, divisores, aspas */
+    --decor-line: #e6dcc0;
+    --script-ink: #5c4a2c;        /* NOVO: marrom-mel do nome em script */
+    --leaf: #8fa677;              /* NOVO: sage da folhagem */
+    --radius: 1rem;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #f2efe6;          /* só o "fora do papel", pra enquadrar o mockup */
+    color: var(--foreground);
+    font-family: 'Quicksand', system-ui, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .paper {
+    position: relative;
+    max-width: 860px;
+    margin: 0 auto;
+    background: var(--background);
+    min-height: 100vh;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -40px rgba(75, 70, 54, .35);
+  }
+
+  /* ── Moldura floral (aquarela aproximada em SVG) ─────────────────────── */
+  .frame-top, .frame-bottom {
+    position: absolute; left: 0; width: 100%;
+    pointer-events: none; z-index: 0;
+  }
+  .frame-top { top: 0; height: 760px; }
+  .frame-bottom { bottom: 0; height: 190px; }
+  .content { position: relative; z-index: 1; padding: 0 24px 288px; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────────── */
+  .hero { text-align: center; padding: 210px 8% 40px; }
+  .eyebrow {
+    font-weight: 700; font-size: 1.05rem; letter-spacing: .01em;
+    margin: 0 0 6px;
+  }
+  .smallcaps {
+    font-family: 'Cormorant Garamond', serif;
+    font-variant: small-caps; font-size: 1.45rem; letter-spacing: .06em;
+    color: var(--script-ink); margin: 0;
+  }
+  .baby-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(4rem, 13vw, 6.5rem);
+    line-height: .95; color: var(--script-ink);
+    margin: 6px 0 18px; text-shadow: 0 2px 0 #fff;
+  }
+  .intro {
+    max-width: 30rem; margin: 0 auto; font-size: 1.06rem; line-height: 1.7;
+  }
+  .intro strong { font-weight: 700; }
+  .bee-hero { width: 210px; margin: 26px auto 8px; display: block; }
+  .event-date { font-size: 1.35rem; letter-spacing: .01em; margin: 14px 0 2px; }
+  .event-time { font-size: 1.1rem; color: var(--muted-foreground); margin: 0 0 14px; }
+  .venue { font-weight: 700; font-size: 1.05rem; margin: 0; }
+  .venue-address { font-weight: 600; font-size: .95rem; margin: 2px 0 0; }
+  .venue-city { font-size: .85rem; color: var(--muted-foreground); margin: 4px 0 0; }
+
+  /* ── Divisor com abelhinha (substitui o coração) ─────────────────────── */
+  .divider { display: flex; align-items: center; justify-content: center; margin: 52px 0; }
+  .divider span { height: 1px; width: 64px; background: var(--decor-line); }
+  .divider svg { margin: 0 14px; width: 30px; height: 22px; }
+
+  /* ── Seções ───────────────────────────────────────────────────────────── */
+  .section-title {
+    font-family: 'Great Vibes', cursive; font-size: 2.9rem; line-height: 1;
+    color: var(--script-ink); text-align: center; margin: 0 0 6px;
+  }
+  .section-sub { text-align: center; color: var(--muted-foreground); font-size: .92rem; margin: 10px 0 0; }
+  .category {
+    font-family: 'Great Vibes', cursive; font-size: 2rem; line-height: 1;
+    color: var(--primary); text-align: center; margin: 34px 0 16px;
+  }
+
+  /* ── Mensagens de carinho ─────────────────────────────────────────────── */
+  .messages { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; }
+  .msg-card {
+    background: #fff; border: 2px solid #fff; border-radius: 1.6rem; padding: 20px;
+    box-shadow: 0 16px 30px -16px rgba(79, 88, 59, .22);
+    outline: 1px solid var(--border); outline-offset: -2px;
+  }
+  .msg-quote { font-family: 'Great Vibes', cursive; font-size: 2.4rem; line-height: .6; color: var(--decor); display: block; }
+  .msg-body { font-size: .9rem; line-height: 1.65; color: rgba(75, 70, 54, .85); margin: 12px 0; }
+  .msg-author { font-family: 'Great Vibes', cursive; font-size: 1.6rem; line-height: 1; color: var(--primary); margin: 0; }
+  .carousel-ctrls { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
+
+  /* ── Cards de presente ────────────────────────────────────────────────── */
+  .gifts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .gift {
+    position: relative; border: 2px solid #fff; outline: 1px solid var(--border); outline-offset: -2px;
+    border-radius: 1.6rem; overflow: hidden; background: #fff; cursor: pointer;
+    box-shadow: 0 16px 30px -16px rgba(79, 88, 59, .22);
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .gift:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 24px 40px -16px rgba(79, 88, 59, .3); }
+  .gift[aria-pressed="true"] { border-color: var(--primary); outline-color: transparent; }
+  .gift-thumb {
+    height: 172px; display: flex; align-items: center; justify-content: center;
+    background: var(--muted); font-size: 2.6rem;
+  }
+  .gift-body { padding: 16px; }
+  .gift-name { font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
+  .gift-desc { font-size: .85rem; color: var(--muted-foreground); margin: 0 0 6px; line-height: 1.5; }
+  .gift-price { font-size: .9rem; font-weight: 600; margin: 0; }
+  .gift-link { font-size: .75rem; color: var(--muted-foreground); text-decoration: none; display: inline-block; margin-top: 6px; }
+  .gift-link:hover { color: var(--foreground); text-decoration: underline; }
+  /* selo de cera dourado — agora com abelhinha em vez de coração */
+  .seal {
+    position: absolute; right: 12px; top: 12px; z-index: 2;
+    width: 44px; height: 44px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 35% 30%, #f4b840, #d9a450);
+    box-shadow: 0 4px 10px -2px rgba(79, 88, 59, .35);
+    transform: scale(.5); opacity: 0; transition: all .3s;
+  }
+  .gift[aria-pressed="true"] .seal { transform: scale(1); opacity: 1; }
+  .seal svg { width: 30px; height: 22px; }
+
+  /* ── Barra fixa + botões ──────────────────────────────────────────────── */
+  .sticky {
+    position: fixed; inset-inline: 0; bottom: 0; z-index: 30;
+    border-top: 1px solid var(--secondary);
+    background: rgba(255, 255, 255, .92); backdrop-filter: blur(8px);
+  }
+  .sticky-inner {
+    max-width: 812px; margin: 0 auto; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .sticky-count { font-size: .9rem; font-weight: 600; color: var(--muted-foreground); }
+  .btn {
+    font-family: inherit; font-size: .95rem; font-weight: 600; cursor: pointer;
+    border-radius: 999px; padding: 12px 30px; border: 1px solid var(--border);
+    background: #fff; color: var(--foreground);
+  }
+  .btn-harvest {
+    background-image: linear-gradient(135deg, #d9a450, #f4b840);
+    border: none; color: #2f3623;
+    box-shadow: 0 12px 22px -8px rgba(217, 164, 80, .75);
+  }
+  .btn-harvest:hover { filter: brightness(1.04); }
+  .btn-sm { padding: 7px 16px; font-size: .82rem; font-weight: 600; }
+
+  .note {
+    max-width: 860px; margin: 0 auto; padding: 18px 24px 40px;
+    font-size: .8rem; color: #6b7355; background: #f2efe6;
+  }
+
+  @media (max-width: 640px) {
+    .frame-top { height: 620px; }
+    .hero { padding: 150px 6% 30px; }
+    .messages, .gifts { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+  <!-- Moldura floral: arco no topo, guirlanda no pé -->
+  <svg class="frame-top" viewBox="0 0 800 760" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+    <defs>
+      <filter id="soft"><feGaussianBlur stdDeviation="0.7" /></filter>
+      <linearGradient id="fadeGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset=".58" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+      </linearGradient>
+      <!-- o arco desvanece no pé em vez de ser cortado em linha reta -->
+      <mask id="archFade"><rect width="800" height="760" fill="url(#fadeGrad)"/></mask>
+      <!-- abelhinha reutilizada nos selos dos cards -->
+      <g id="beeGlyph">
+        <ellipse cx="15" cy="11" rx="10" ry="6.5" fill="#fffdf3" opacity=".95" transform="rotate(-22 15 11)"/>
+        <ellipse cx="29" cy="11" rx="10" ry="6.5" fill="#fffdf3" opacity=".95" transform="rotate(22 29 11)"/>
+        <ellipse cx="22" cy="21" rx="11" ry="8.5" fill="#2f3623"/>
+        <path d="M17 15c1 7 2 10 3 13" stroke="#f4b840" stroke-width="2.6" fill="none"/>
+        <path d="M25 15c1 7 2 10 3 12" stroke="#f4b840" stroke-width="2.6" fill="none"/>
+        <path d="M17 5c-2-3-4-4-7-5M27 5c2-3 4-4 7-5" stroke="#2f3623" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </g>
+    </defs>
+
+    <!-- arco onde a flora é distribuída (path invisível) -->
+    <path id="archPath" d="M74 760C46 520 62 300 176 176 300 42 500 42 624 176 738 300 754 520 726 760" fill="none" stroke="none"/>
+    <g id="archFlora" filter="url(#soft)" mask="url(#archFade)"></g>
+
+    <!-- laço de fita (mel) — desenhado por último, fica acima da flora -->
+    <g filter="url(#soft)">
+      <path d="M395 76C388 104 375 124 356 141" stroke="#f0d489" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <path d="M405 76C412 104 425 124 444 141" stroke="#f3dc9a" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <path d="M400 70C376 20 332 16 327 45c-4 25 39 33 73 25Z" fill="#eed283"/>
+      <path d="M400 70c24-50 68-54 73-25 4 25-39 33-73 25Z" fill="#f5e0a4"/>
+      <path d="M400 70c-15-17-31-25-46-26" stroke="#e5c476" stroke-width="1.8" fill="none" opacity=".65"/>
+      <path d="M400 70c15-17 31-25 46-26" stroke="#e5c476" stroke-width="1.8" fill="none" opacity=".65"/>
+      <ellipse cx="400" cy="71" rx="10" ry="9" fill="#e8c86f"/>
+    </g>
+  </svg>
+
+  <svg class="frame-bottom" viewBox="0 0 800 190" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path id="hemPath" d="M-20 120C120 60 260 165 400 115 540 65 660 160 820 105" fill="none" stroke="none"/>
+    <g id="hemFlora" filter="url(#soft)"></g>
+  </svg>
+
+  <div class="content">
+
+    <!-- ── Hero / cabeçalho da lista ─────────────────────────────────── -->
+    <header class="hero">
+      <p class="eyebrow">Um pouquinho de mel está a caminho…</p>
+      <p class="smallcaps">Celebre conosco no chá da</p>
+      <h1 class="baby-name">Melissa</h1>
+
+      <p class="intro">
+        Para adoçar ainda mais esse momento, pedimos gentilmente
+        <strong>fraldas</strong> ou <strong>presentes</strong> para a bebê.
+      </p>
+
+      <!-- abelhinha dormindo -->
+      <svg class="bee-hero" viewBox="0 0 240 170" aria-hidden="true">
+        <g filter="url(#soft)">
+          <path d="M96 66c-14-16-26-26-38-30" stroke="#6b563a" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <path d="M104 58c-6-20-12-32-22-40" stroke="#6b563a" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <circle cx="56" cy="34" r="5" fill="#6b563a"/><circle cx="80" cy="16" r="5" fill="#6b563a"/>
+          <ellipse cx="152" cy="66" rx="46" ry="34" fill="#f3ead6" opacity=".95" transform="rotate(-12 152 66)"/>
+          <ellipse cx="163" cy="92" rx="38" ry="26" fill="#e9dcc2" opacity=".9" transform="rotate(8 163 92)"/>
+          <path d="M112 92c0-26 22-44 50-44s52 16 52 40-24 42-52 42-50-14-50-38z" fill="#5b4028"/>
+          <path d="M138 51c10 30 10 52 2 78" stroke="#f0c884" stroke-width="17" fill="none" opacity=".95"/>
+          <path d="M176 50c10 30 10 54 2 80" stroke="#f0c884" stroke-width="15" fill="none" opacity=".9"/>
+          <ellipse cx="96" cy="88" rx="46" ry="43" fill="#f2c98a"/>
+          <ellipse cx="86" cy="94" rx="36" ry="31" fill="#f7dcae" opacity=".8"/>
+          <path d="M78 92c5 5 13 5 18 0" stroke="#6b563a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M108 100c5 5 13 5 18 0" stroke="#6b563a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="70" cy="108" r="8" fill="#f0b0a0" opacity=".65"/>
+          <circle cx="116" cy="116" r="8" fill="#f0b0a0" opacity=".6"/>
+          <path d="M124 128c8 10 22 12 32 4" stroke="#e2c79a" stroke-width="12" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+
+      <p class="event-date">03 de outubro de 2026</p>
+      <p class="event-time">16:00</p>
+      <p class="venue">Salão de Festas – Condomínio Paisagem Tamboré</p>
+      <p class="venue-address">Av. Marcos Penteado de Ulhôa Rodrigues, 2113</p>
+      <p class="venue-city">Tamboré · Santana de Parnaíba – SP</p>
+    </header>
+
+    <!-- ── Divisor abelhinha ─────────────────────────────────────────── -->
+    <div class="divider" aria-hidden="true">
+      <span></span>
+      <svg viewBox="0 0 40 28"><g fill="none">
+        <ellipse cx="14" cy="10" rx="9" ry="6" fill="#f3ead6" opacity=".9" transform="rotate(-20 14 10)"/>
+        <ellipse cx="26" cy="10" rx="9" ry="6" fill="#f3ead6" opacity=".9" transform="rotate(20 26 10)"/>
+        <ellipse cx="20" cy="18" rx="10" ry="8" fill="#d9a450"/>
+        <path d="M15 12c1 7 2 10 4 13M22 11c1 8 2 11 3 13" stroke="#5b4028" stroke-width="2.4"/>
+        <path d="M16 6c-2-3-4-4-6-5M24 6c2-3 4-4 6-5" stroke="#5b4028" stroke-width="1.6" stroke-linecap="round"/>
+      </g></svg>
+      <span></span>
+    </div>
+
+    <!-- ── Mensagens de carinho ──────────────────────────────────────── -->
+    <section>
+      <h2 class="section-title">Mensagens de carinho</h2>
+      <div class="messages">
+        <article class="msg-card">
+          <span class="msg-quote">&ldquo;</span>
+          <p class="msg-body">Que a Melissa venha cheia de saúde e encha a casa de risadas. Já estamos apaixonados por ela!</p>
+          <p class="msg-author">Tia Carol</p>
+        </article>
+        <article class="msg-card">
+          <span class="msg-quote">&ldquo;</span>
+          <p class="msg-body">Um pouquinho de mel pra adoçar a vida de vocês. Contem sempre com a gente nessa nova fase.</p>
+          <p class="msg-author">Bruno e Lívia</p>
+        </article>
+      </div>
+      <div class="carousel-ctrls">
+        <button class="btn btn-sm" aria-label="Anterior">←</button>
+        <button class="btn btn-sm" aria-label="Próxima">→</button>
+        <button class="btn btn-sm">Ver todas (12)</button>
+      </div>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <span></span>
+      <svg viewBox="0 0 40 28"><g>
+        <ellipse cx="14" cy="10" rx="9" ry="6" fill="#f3ead6" opacity=".9" transform="rotate(-20 14 10)"/>
+        <ellipse cx="26" cy="10" rx="9" ry="6" fill="#f3ead6" opacity=".9" transform="rotate(20 26 10)"/>
+        <ellipse cx="20" cy="18" rx="10" ry="8" fill="#d9a450"/>
+        <path d="M15 12c1 7 2 10 4 13M22 11c1 8 2 11 3 13" stroke="#5b4028" stroke-width="2.4" fill="none"/>
+        <path d="M16 6c-2-3-4-4-6-5M24 6c2-3 4-4 6-5" stroke="#5b4028" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      </g></svg>
+      <span></span>
+    </div>
+
+    <!-- ── Presentes ─────────────────────────────────────────────────── -->
+    <section>
+      <h2 class="section-title">Escolha com carinho</h2>
+      <p class="section-sub">Selecione um ou mais presentes para a Melissa 🍯</p>
+
+      <h3 class="category">Fraldas e higiene</h3>
+      <div class="gifts">
+        <article class="gift" role="button" tabindex="0" aria-pressed="true">
+          <span class="seal"><svg viewBox="0 0 44 32"><use href="#beeGlyph"/></svg></span>
+          <div class="gift-thumb">🧷</div>
+          <div class="gift-body">
+            <p class="gift-name">Fralda Pampers Premium — tam. RN</p>
+            <p class="gift-desc">Pacote com 30 unidades</p>
+            <p class="gift-price">R$ 59,90</p>
+            <a class="gift-link" href="#" onclick="event.stopPropagation();return false">Ver item →</a>
+          </div>
+        </article>
+        <article class="gift" role="button" tabindex="0" aria-pressed="false">
+          <span class="seal"><svg viewBox="0 0 44 32"><use href="#beeGlyph"/></svg></span>
+          <div class="gift-thumb">🧴</div>
+          <div class="gift-body">
+            <p class="gift-name">Kit banho — sabonete e shampoo</p>
+            <p class="gift-desc">Linha sem lágrimas, 2 peças</p>
+            <p class="gift-price">R$ 74,00</p>
+            <a class="gift-link" href="#" onclick="event.stopPropagation();return false">Ver item →</a>
+          </div>
+        </article>
+      </div>
+
+      <h3 class="category">Enxoval da Melissa</h3>
+      <div class="gifts">
+        <article class="gift" role="button" tabindex="0" aria-pressed="true">
+          <span class="seal"><svg viewBox="0 0 44 32"><use href="#beeGlyph"/></svg></span>
+          <div class="gift-thumb">🧺</div>
+          <div class="gift-body">
+            <p class="gift-name">Manta de algodão favo de mel</p>
+            <p class="gift-desc">Tom mel, 80 × 100 cm</p>
+            <p class="gift-price">R$ 129,90</p>
+          </div>
+        </article>
+        <article class="gift" role="button" tabindex="0" aria-pressed="false">
+          <span class="seal"><svg viewBox="0 0 44 32"><use href="#beeGlyph"/></svg></span>
+          <div class="gift-thumb">🐝</div>
+          <div class="gift-body">
+            <p class="gift-name">Mobile musical abelhinhas</p>
+            <p class="gift-desc">Para o berço, com caixinha de música</p>
+            <p class="gift-price">R$ 189,00</p>
+            <a class="gift-link" href="#" onclick="event.stopPropagation();return false">Ver item →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── Barra fixa ──────────────────────────────────────────────────── -->
+  <div class="sticky">
+    <div class="sticky-inner">
+      <span class="sticky-count" id="count">2 presentes selecionados 🍯</span>
+      <button class="btn btn-harvest">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<p class="note">
+  Mockup estático — a flora é gerada em SVG (sem imagens externas). Fontes: Great Vibes (nome),
+  Cormorant Garamond (versalete) e Quicksand (corpo, já usada no app). Clique nos cards pra ver o
+  selo de cera com abelhinha.
+</p>
+
+<script>
+  /* ── Flora: distribui flores e folhas ao longo de um path ───────────── */
+  const SVG = 'http://www.w3.org/2000/svg';
+  // PRNG determinístico — o arranjo é sempre o mesmo entre recarregamentos
+  let seed = 20261003;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+
+  const YELLOWS = ['#f6d97a', '#fbe8a6', '#f2c85c', '#f9e08c'];
+  const PEACHES = ['#f8d6c0', '#f6c3a8', '#fae0d2'];
+  const GREENS  = ['#a7b98d', '#8fa677', '#c6d3ae', '#b7c69c'];
+
+  function flower(size, palette) {
+    const g = document.createElementNS(SVG, 'g');
+    const fill = palette[Math.floor(rnd() * palette.length)];
+    for (let i = 0; i < 5; i++) {
+      const p = document.createElementNS(SVG, 'ellipse');
+      const a = (i / 5) * Math.PI * 2 + rnd();
+      p.setAttribute('cx', Math.cos(a) * size * 0.6);
+      p.setAttribute('cy', Math.sin(a) * size * 0.6);
+      p.setAttribute('rx', size * 0.55);
+      p.setAttribute('ry', size * 0.45);
+      p.setAttribute('fill', fill);
+      p.setAttribute('opacity', 0.62 + rnd() * 0.3);
+      g.appendChild(p);
+    }
+    const c = document.createElementNS(SVG, 'circle');
+    c.setAttribute('r', size * 0.32);
+    c.setAttribute('fill', '#e9b95a');
+    c.setAttribute('opacity', '.75');
+    g.appendChild(c);
+    return g;
+  }
+
+  function sprig(size) {
+    const g = document.createElementNS(SVG, 'g');
+    const stem = document.createElementNS(SVG, 'path');
+    const len = size * 5;
+    stem.setAttribute('d', `M0 0 C ${size} ${-len * 0.3}, ${size * 0.4} ${-len * 0.7}, 0 ${-len}`);
+    stem.setAttribute('stroke', '#9fb188');
+    stem.setAttribute('stroke-width', Math.max(0.8, size * 0.16));
+    stem.setAttribute('fill', 'none');
+    g.appendChild(stem);
+    const leaves = 5 + Math.floor(rnd() * 4);
+    for (let i = 0; i < leaves; i++) {
+      const t = (i + 1) / (leaves + 1);
+      const leaf = document.createElementNS(SVG, 'ellipse');
+      leaf.setAttribute('cx', (i % 2 ? 1 : -1) * size * (0.8 + rnd() * 0.5));
+      leaf.setAttribute('cy', -len * t);
+      leaf.setAttribute('rx', size * (0.75 + rnd() * 0.4));
+      leaf.setAttribute('ry', size * 0.36);
+      leaf.setAttribute('fill', GREENS[Math.floor(rnd() * GREENS.length)]);
+      leaf.setAttribute('opacity', 0.55 + rnd() * 0.35);
+      leaf.setAttribute('transform', `rotate(${(i % 2 ? 28 : -28) + rnd() * 16} ${(i % 2 ? 1 : -1) * size} ${-len * t})`);
+      g.appendChild(leaf);
+    }
+    return g;
+  }
+
+  function garland(pathId, groupId, count, spread) {
+    const path = document.getElementById(pathId);
+    const group = document.getElementById(groupId);
+    const total = path.getTotalLength();
+    for (let i = 0; i < count; i++) {
+      const at = (i / count) * total + rnd() * (total / count);
+      const p = path.getPointAtLength(Math.min(at, total));
+      const q = path.getPointAtLength(Math.min(at + 6, total));
+      const ang = Math.atan2(q.y - p.y, q.x - p.x);
+      // deslocamento perpendicular ao path → dá "espessura" à guirlanda
+      const off = (rnd() - 0.5) * spread;
+      const x = p.x + Math.cos(ang + Math.PI / 2) * off;
+      const y = p.y + Math.sin(ang + Math.PI / 2) * off;
+      const kind = rnd();
+      const el = kind < 0.42
+        ? sprig(3 + rnd() * 4)
+        : flower(4 + rnd() * 7, kind < 0.82 ? YELLOWS : PEACHES);
+      el.setAttribute(
+        'transform',
+        `translate(${x} ${y}) rotate(${(ang * 180) / Math.PI + (rnd() - 0.5) * 70})`
+      );
+      group.appendChild(el);
+    }
+  }
+
+  garland('archPath', 'archFlora', 190, 96);
+  garland('hemPath', 'hemFlora', 120, 92);
+
+  /* ── Seleção de presentes (só pra sentir a interação) ────────────────── */
+  const cards = document.querySelectorAll('.gift');
+  const count = document.getElementById('count');
+  function refresh() {
+    const n = document.querySelectorAll('.gift[aria-pressed="true"]').length;
+    count.textContent = n === 0
+      ? 'Nenhum presente selecionado'
+      : `${n} ${n === 1 ? 'presente selecionado' : 'presentes selecionados'} 🍯`;
+  }
+  cards.forEach((c) => {
+    const toggle = () => {
+      c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+      refresh();
+    };
+    c.addEventListener('click', toggle);
+    c.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+    });
+  });
+</script>
+</body>
+</html>

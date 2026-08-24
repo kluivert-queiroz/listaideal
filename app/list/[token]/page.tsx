@@ -2,7 +2,11 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import { SelectionForm } from '@/components/guest/selection-form'
 import { MessagesSection } from '@/components/guest/messages-section'
+import { SleepingBee } from '@/components/decor/sleeping-bee'
+import { BeeDivider } from '@/components/decor/bee-divider'
 import { MESSAGES_FETCH_LIMIT } from '@/lib/messages'
+import { HERO_HEADLINE_DEFAULT, HERO_KICKER_DEFAULT } from '@/lib/copy'
+import { renderInlineMarkup } from '@/lib/rich-text'
 import type { GiftWithSlots, PublicMessage } from '@/lib/types'
 
 export default async function GuestListPage({
@@ -68,12 +72,44 @@ export default async function GuestListPage({
   const messages: PublicMessage[] = messageRows ?? []
 
   return (
-    <div className="bg-romantic min-h-screen">
-      <div className="max-w-2xl mx-auto px-4 py-14 sm:py-20">
-        {/* List header */}
-        <header className="text-center space-y-3">
+    <div className="relative overflow-hidden bg-background min-h-screen">
+      <div className="decor-arch" aria-hidden="true" />
+      <div className="decor-hem" aria-hidden="true" />
+
+      <div className="relative z-10 max-w-2xl mx-auto px-4 pb-72">
+        {/* Hero */}
+        <header className="text-center pt-[150px] sm:pt-[210px] px-[6%] sm:px-[8%] pb-10 space-y-3">
+          <p className="font-bold text-base sm:text-[1.05rem]">
+            {list.headline ?? HERO_HEADLINE_DEFAULT}
+          </p>
+          <p className="font-smallcaps [font-variant:small-caps] text-[1.45rem] tracking-[0.06em] text-script-ink">
+            {list.kicker ?? HERO_KICKER_DEFAULT}
+          </p>
+          {list.honoree_names && (
+            <h1 className="font-script text-[clamp(4rem,13vw,6.5rem)] leading-[0.95] text-script-ink [text-shadow:0_2px_0_#fff]">
+              {list.honoree_names}
+            </h1>
+          )}
+          <p
+            className={
+              list.honoree_names
+                ? 'text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground'
+                : 'font-script text-[clamp(4rem,13vw,6.5rem)] leading-[0.95] text-script-ink [text-shadow:0_2px_0_#fff]'
+            }
+          >
+            {list.title}
+          </p>
+
+          {list.intro_message && (
+            <p className="max-w-[30rem] mx-auto text-[1.06rem] leading-[1.7] whitespace-pre-wrap pt-3">
+              {renderInlineMarkup(list.intro_message)}
+            </p>
+          )}
+
+          <SleepingBee className="w-[210px] mx-auto mt-6 mb-2" />
+
           {list.event_date && (
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+            <p className="text-[1.35rem] mt-3.5">
               {new Date(list.event_date).toLocaleDateString('pt-BR', {
                 day: 'numeric',
                 month: 'long',
@@ -81,63 +117,29 @@ export default async function GuestListPage({
               })}
             </p>
           )}
-          {list.couple_names && (
-            <h1 className="font-script text-6xl sm:text-7xl text-primary leading-none [text-shadow:0_2px_0_#fff]">
-              {list.couple_names}
-            </h1>
+          {list.event_time && (
+            <p className="text-[1.1rem] text-muted-foreground">{list.event_time.slice(0, 5)}</p>
           )}
-          <p
-            className={
-              list.couple_names
-                ? 'text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground'
-                : 'font-script text-6xl sm:text-7xl text-primary leading-none [text-shadow:0_2px_0_#fff]'
-            }
-          >
-            {list.title}
-          </p>
+          {list.venue_name && <p className="font-bold text-[1.05rem]">{list.venue_name}</p>}
+          {list.venue_address && (
+            <p className="font-semibold text-[0.95rem]">{list.venue_address}</p>
+          )}
+          {list.venue_city && (
+            <p className="text-[0.85rem] text-muted-foreground">{list.venue_city}</p>
+          )}
         </header>
 
-        {/* Heart divider */}
-        <div className="my-10 flex items-center justify-center" aria-hidden="true">
-          <span className="h-px w-16 bg-[#ebc4c4]" />
-          <svg viewBox="0 0 24 24" className="mx-3 h-5 w-5 fill-[#d98e8e]">
-            <path d="M12 18s-8-5.2-8-10.2A4 4 0 0112 5a4 4 0 018 2.8C20 12.8 12 18 12 18z" />
-          </svg>
-          <span className="h-px w-16 bg-[#ebc4c4]" />
-        </div>
-        <div>
-          {list.intro_message && (
-            <>
-              <p className="max-w-prose mx-auto text-foreground/80 italic leading-relaxed whitespace-pre-wrap pt-3">
-                {list.intro_message}
-              </p>
-              <div className="my-10 flex items-center justify-center" aria-hidden="true">
-                <span className="h-px w-16 bg-[#ebc4c4]" />
-                <svg viewBox="0 0 24 24" className="mx-3 h-5 w-5 fill-[#d98e8e]">
-                  <path d="M12 18s-8-5.2-8-10.2A4 4 0 0112 5a4 4 0 018 2.8C20 12.8 12 18 12 18z" />
-                </svg>
-                <span className="h-px w-16 bg-[#ebc4c4]" />
-              </div>
-            </>
-          )}
-        </div>
+        <BeeDivider />
 
         {/* Mensagens de carinho — placed before the closed/SelectionForm block so
             it stays above SelectionForm's fixed bottom-0 sticky bar, and remains
             visible on a closed list (FR-2.5 stops new selections, not memories). */}
         {messages.length > 0 && (
           <>
-            <div className="my-10 flex items-center justify-center" aria-hidden="true">
-              <span className="h-px w-16 bg-[#ebc4c4]" />
-              <svg viewBox="0 0 24 24" className="mx-3 h-5 w-5 fill-[#d98e8e]">
-                <path d="M12 18s-8-5.2-8-10.2A4 4 0 0112 5a4 4 0 018 2.8C20 12.8 12 18 12 18z" />
-              </svg>
-              <span className="h-px w-16 bg-[#ebc4c4]" />
-            </div>
             <MessagesSection messages={messages} total={messagesTotal ?? messages.length} />
+            <BeeDivider />
           </>
         )}
-
 
         {/* Closed state */}
         {list.status === 'closed' ? (
@@ -150,7 +152,12 @@ export default async function GuestListPage({
             </p>
           </div>
         ) : (
-          <SelectionForm gifts={availableGifts} categories={categories ?? []} listToken={token} />
+          <SelectionForm
+            gifts={availableGifts}
+            categories={categories ?? []}
+            listToken={token}
+            honoreeNames={list.honoree_names}
+          />
         )}
       </div>
     </div>

@@ -2,9 +2,15 @@ export type List = {
   id: string
   owner_id: string
   title: string
-  couple_names: string | null
+  honoree_names: string | null
+  headline: string | null
+  kicker: string | null
   intro_message: string | null
   event_date: string | null
+  event_time: string | null
+  venue_name: string | null
+  venue_address: string | null
+  venue_city: string | null
   share_token: string
   status: 'open' | 'closed'
   created_at: string

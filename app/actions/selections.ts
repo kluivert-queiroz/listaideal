@@ -3,7 +3,7 @@
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/server'
-import { sanitizeGuestText } from '@/lib/messages'
+import { sanitizeUserText } from '@/lib/text'
 
 const submitSchema = z.object({
   guest_name: z.string().trim().min(1, 'Seu nome é obrigatório.').max(200),
@@ -35,8 +35,8 @@ export async function submitSelectionsAction(
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
-  const guest_name = sanitizeGuestText(parsed.data.guest_name)
-  const message = parsed.data.message ? sanitizeGuestText(parsed.data.message) : undefined
+  const guest_name = sanitizeUserText(parsed.data.guest_name)
+  const message = parsed.data.message ? sanitizeUserText(parsed.data.message) : undefined
   const { list_token, gift_ids } = parsed.data
   const supabase = createServiceClient()
 

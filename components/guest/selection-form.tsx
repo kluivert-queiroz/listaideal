@@ -12,7 +12,17 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
+import { BeeSeal } from '@/components/decor/bee-seal'
 import { groupGiftsIntoSections } from '@/lib/gift-sections'
+import {
+  CONFIRMATION_SUBTITLE,
+  DETAILS_SUBTITLE,
+  DETAILS_TITLE,
+  GIFTS_TITLE,
+  GUEST_MESSAGE_PLACEHOLDER,
+  giftsSubtitle,
+  selectedCount,
+} from '@/lib/copy'
 import type { GiftCategory, GiftWithSlots } from '@/lib/types'
 
 type Step = 'select' | 'details'
@@ -21,9 +31,10 @@ type Props = {
   gifts: GiftWithSlots[]
   categories: GiftCategory[]
   listToken: string
+  honoreeNames?: string | null
 }
 
-export function SelectionForm({ gifts, categories, listToken }: Props) {
+export function SelectionForm({ gifts, categories, listToken, honoreeNames = null }: Props) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [step, setStep] = useState<Step>('select')
   const [result, action, pending] = useActionState<
@@ -51,12 +62,12 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
   if (result !== null && 'reserved' in result) {
     return (
       <div className="space-y-6 text-center py-10">
-        <div className="text-5xl">💝</div>
+        <div className="text-5xl">🍯</div>
         <div className="space-y-1">
           <h2 className="font-script text-5xl text-primary leading-none">
             Obrigado, {result.guest_name}!
           </h2>
-          <p className="text-muted-foreground">Sua escolha foi registrada com carinho.</p>
+          <p className="text-muted-foreground">{CONFIRMATION_SUBTITLE}</p>
         </div>
 
         {result.reserved.length > 0 && (
@@ -65,7 +76,7 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
             <ul className="space-y-1 text-sm text-muted-foreground">
               {result.reserved.map((name) => (
                 <li key={name} className="flex items-center gap-2">
-                  <span className="text-green-600">✓</span> {name}
+                  <span className="text-success">✓</span> {name}
                 </li>
               ))}
             </ul>
@@ -74,13 +85,13 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
 
         {result.unavailable.length > 0 && (
           <div className="mx-auto max-w-sm text-left">
-            <p className="mb-2 text-sm font-medium text-amber-700">
+            <p className="mb-2 text-sm font-medium text-warning">
               Já reservados quando você enviou:
             </p>
             <ul className="space-y-1 text-sm text-muted-foreground">
               {result.unavailable.map((name) => (
                 <li key={name} className="flex items-center gap-2">
-                  <span className="text-amber-600">✗</span> {name}
+                  <span className="text-warning">✗</span> {name}
                 </li>
               ))}
             </ul>
@@ -101,11 +112,11 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
       {step === 'select' && (
         <div className="space-y-6 pb-28">
           <div className="text-center">
-            <h2 className="font-script text-4xl text-primary leading-none">
-              Escolha com carinho
+            <h2 className="font-script text-[2.9rem] text-script-ink leading-none">
+              {GIFTS_TITLE}
             </h2>
             <p className="text-sm text-muted-foreground mt-2">
-              Selecione um ou mais presentes para o casal 💕
+              {giftsSubtitle(honoreeNames)}
             </p>
           </div>
 
@@ -121,7 +132,7 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
               return sections.map((section) => (
                 <div key={section.id ?? 'uncategorized'} className="space-y-4">
                   {showHeadings && (
-                    <h3 className="font-script text-2xl text-primary leading-none text-center">
+                    <h3 className="font-script text-[2rem] text-primary leading-none text-center">
                       {section.label}
                     </h3>
                   )}
@@ -139,21 +150,21 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
                             (e.key === ' ' || e.key === 'Enter') &&
                             (e.preventDefault(), toggle(gift.id))
                           }
-                          className={`group relative cursor-pointer select-none overflow-hidden rounded-3xl border-2 p-0 outline-none transition-all duration-300 shadow-[0_16px_30px_-16px_rgba(193,110,114,0.45)] hover:-translate-y-1 hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_-16px_rgba(193,110,114,0.55)] focus-visible:ring-2 focus-visible:ring-ring ${
-                            selected ? 'border-[#d98e8e]' : 'border-white'
+                          className={`group relative cursor-pointer select-none overflow-hidden rounded-3xl border-2 p-0 outline-none transition-all duration-300 shadow-[0_16px_30px_-16px_rgba(79,88,59,0.22)] hover:-translate-y-1 hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_-16px_rgba(79,88,59,0.3)] focus-visible:ring-2 focus-visible:ring-ring ${
+                            selected ? 'border-primary' : 'border-white'
                           }`}
                         >
-                          {/* Wax-seal heart */}
+                          {/* Wax-seal bee */}
                           <span
-                            className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full text-base text-white shadow-[0_4px_10px_-2px_rgba(193,110,114,0.6)] transition-all duration-300 ${
+                            className={`absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-[0_4px_10px_-2px_rgba(79,88,59,0.35)] transition-all duration-300 ${
                               selected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
                             }`}
                             style={{
                               background:
-                                'radial-gradient(circle at 35% 30%, #e59a9e, #c16e72)',
+                                'radial-gradient(circle at 35% 30%, #f4b840, #d9a450)',
                             }}
                           >
-                            ♥
+                            <BeeSeal className="h-[22px] w-[30px]" />
                           </span>
 
                           {gift.image_url ? (
@@ -211,18 +222,12 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
             <div className="fixed inset-x-0 bottom-0 z-30 border-t border-secondary bg-background/90 backdrop-blur">
               <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 px-4 py-3">
                 <span className="text-sm font-medium text-muted-foreground">
-                  {selectedIds.size === 0
-                    ? 'Nenhum presente selecionado'
-                    : `${selectedIds.size} ${
-                        selectedIds.size === 1
-                          ? 'presente selecionado'
-                          : 'presentes selecionados'
-                      } 💝`}
+                  {selectedCount(selectedIds.size)}
                 </span>
                 <Button
                   type="button"
                   size="lg"
-                  className="btn-romantic rounded-full px-8"
+                  className="btn-harvest rounded-full px-8"
                   disabled={selectedIds.size === 0}
                   onClick={() => setStep('details')}
                 >
@@ -238,10 +243,8 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
       {step === 'details' && (
         <div className="mx-auto max-w-md space-y-6">
           <div className="text-center">
-            <h2 className="font-script text-4xl text-primary leading-none">Quase lá!</h2>
-            <p className="text-sm text-muted-foreground mt-2">
-              Deixe seu nome e uma mensagem para o casal.
-            </p>
+            <h2 className="font-script text-4xl text-primary leading-none">{DETAILS_TITLE}</h2>
+            <p className="text-sm text-muted-foreground mt-2">{DETAILS_SUBTITLE}</p>
           </div>
 
           {result !== null && 'error' in result && (
@@ -295,7 +298,7 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
               <Textarea
                 id="message"
                 name="message"
-                placeholder="Parabéns! Desejo a vocês uma vida cheia de amor e felicidade…"
+                placeholder={GUEST_MESSAGE_PLACEHOLDER}
                 rows={3}
               />
             </div>
@@ -313,7 +316,7 @@ export function SelectionForm({ gifts, categories, listToken }: Props) {
             <Button
               type="submit"
               size="lg"
-              className="btn-romantic flex-1 rounded-full"
+              className="btn-harvest flex-1 rounded-full"
               disabled={pending}
             >
               {pending ? 'Enviando…' : 'Confirmar escolha'}

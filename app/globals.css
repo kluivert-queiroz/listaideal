@@ -9,9 +9,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-dancing);
-  --font-script: var(--font-dancing);
-  --font-heading: var(--font-dancing);
+  --font-serif: var(--font-script);
+  --font-script: var(--font-script);
+  --font-heading: var(--font-script);
+  --font-smallcaps: var(--font-smallcaps);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,6 +42,12 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-decor: var(--decor);
+  --color-decor-line: var(--decor-line);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-script-ink: var(--script-ink);
+  --color-leaf: var(--leaf);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -51,73 +58,88 @@
 }
 
 :root {
-  /* Aconchegante & Manuscrito — paleta blush/pêssego */
-  --background: #fdf4f0;
-  --foreground: #5a4642;
+  /* Harvest & Manuscrito — paleta olive/âmbar
+     Olive Grove #4f583b · Amber Harvest #d9a450 · Sun-Kissed Citrus #f4b840
+     Honey Wheat #ead7b2 · Vanilla Linen #f8f4e8 */
+  --background: #ffffff;
+  --foreground: #4b4636;
   --card: #ffffff;
-  --card-foreground: #5a4642;
+  --card-foreground: #4b4636;
   --popover: #ffffff;
-  --popover-foreground: #5a4642;
-  --primary: #c16e72;
-  --primary-foreground: #ffffff;
-  --secondary: #f6d9d2;
-  --secondary-foreground: #5a4642;
-  --muted: #f7e7e1;
-  --muted-foreground: #a78a85;
-  --accent: #f8e0d6;
-  --accent-foreground: #5a4642;
-  --destructive: #c0564b;
-  --border: #f0dcd6;
-  --input: #ebd7d0;
-  --ring: #d98e8e;
-  --chart-1: #d98e8e;
-  --chart-2: #f8c9a8;
-  --chart-3: #c16e72;
-  --chart-4: #e59a9e;
-  --chart-5: #a78a85;
+  --popover-foreground: #4b4636;
+  --primary: #4f583b;
+  --primary-foreground: #f8f4e8;
+  --secondary: #ead7b2;
+  --secondary-foreground: #4b4636;
+  --muted: #faf6ec;
+  --muted-foreground: #6b7355;
+  --accent: #fbebc8;
+  --accent-foreground: #4b4636;
+  --destructive: #b4452f;
+  --border: #e5dbbf;
+  --input: #dccfa9;
+  --ring: #9c6f1f;
+  /* Decorativos (corações, divisores, aspas) e estados */
+  --decor: #d9a450;
+  --decor-line: #e6dcc0;
+  --success: #5f7a3c;
+  --warning: #9c6f1f;
+  --script-ink: #5c4a2c;
+  --leaf: #8fa677;
+  --chart-1: #4f583b;
+  --chart-2: #d9a450;
+  --chart-3: #f4b840;
+  --chart-4: #ead7b2;
+  --chart-5: #6b7355;
   --radius: 1rem;
-  --sidebar: #fdf4f0;
-  --sidebar-foreground: #5a4642;
-  --sidebar-primary: #c16e72;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f6d9d2;
-  --sidebar-accent-foreground: #5a4642;
-  --sidebar-border: #f0dcd6;
-  --sidebar-ring: #d98e8e;
+  --sidebar: #f8f4e8;
+  --sidebar-foreground: #3f472f;
+  --sidebar-primary: #4f583b;
+  --sidebar-primary-foreground: #f8f4e8;
+  --sidebar-accent: #ead7b2;
+  --sidebar-accent-foreground: #3f472f;
+  --sidebar-border: #e5dbbf;
+  --sidebar-ring: #9c6f1f;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #22261b;
+  --foreground: #f1ead9;
+  --card: #2b3022;
+  --card-foreground: #f1ead9;
+  --popover: #2b3022;
+  --popover-foreground: #f1ead9;
+  --primary: #f4b840;
+  --primary-foreground: #22261b;
+  --secondary: #3a4130;
+  --secondary-foreground: #f1ead9;
+  --muted: #343a29;
+  --muted-foreground: #b9bda4;
+  --accent: #3f472f;
+  --accent-foreground: #f1ead9;
+  --destructive: #e0705a;
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 18%);
+  --ring: #d9a450;
+  --decor: #d9a450;
+  --decor-line: oklch(1 0 0 / 18%);
+  --success: #9dbb6e;
+  --warning: #e2b45c;
+  --script-ink: #f0e2c0;
+  --leaf: #9dbb6e;
+  --chart-1: #f4b840;
+  --chart-2: #d9a450;
+  --chart-3: #ead7b2;
+  --chart-4: #9dbb6e;
+  --chart-5: #b9bda4;
+  --sidebar: #2b3022;
+  --sidebar-foreground: #f1ead9;
+  --sidebar-primary: #f4b840;
+  --sidebar-primary-foreground: #22261b;
+  --sidebar-accent: #3f472f;
+  --sidebar-accent-foreground: #f1ead9;
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: #d9a450;
 }
 
 @layer base {
@@ -132,24 +154,39 @@
   }
 }
 
-/* ── Aconchegante & Manuscrito helpers ───────────────────────────────── */
+/* ── Harvest & Manuscrito helpers ────────────────────────────────────── */
 
-/* Fundo quente em camadas pastel (página do convidado / login) */
-.bg-romantic {
+/* Fundo quente em camadas (página do convidado / login) */
+.bg-harvest {
   background:
-    radial-gradient(circle at 12% 8%, #fce8df 0%, transparent 45%),
-    radial-gradient(circle at 88% 18%, #f8e0ec 0%, transparent 45%),
-    radial-gradient(circle at 50% 100%, #fdefe0 0%, transparent 55%),
+    radial-gradient(circle at 12% 8%, #fdf1d5 0%, transparent 45%),
+    radial-gradient(circle at 88% 18%, #f6ecd3 0%, transparent 45%),
+    radial-gradient(circle at 50% 100%, #f3ead0 0%, transparent 55%),
     var(--background);
 }
 
-/* Botão CTA romântico (gradiente rosa → pêssego) */
-.btn-romantic {
-  background-image: linear-gradient(135deg, #d98e8e, #f8c9a8);
+/* Botão CTA (gradiente âmbar → citrus, texto oliva escuro) */
+.btn-harvest {
+  background-image: linear-gradient(135deg, #d9a450, #f4b840);
   border: none;
-  color: #fff;
-  box-shadow: 0 12px 22px -8px rgba(193, 110, 114, 0.7);
+  color: #2f3623;
+  box-shadow: 0 12px 22px -8px rgba(217, 164, 80, 0.75);
 }
-.btn-romantic:hover {
+.btn-harvest:hover {
   filter: brightness(1.04);
 }
+
+/* Arte da moldura — SVG estático gerado por scripts/generate-decor.mjs */
+.decor-arch, .decor-hem {
+  position: absolute; left: 0; right: 0; pointer-events: none;
+  background-repeat: no-repeat; background-size: contain;
+}
+.decor-arch {
+  top: 0; height: 760px;
+  background-image: url('/decor/arch.svg'); background-position: top center;
+}
+.decor-hem {
+  bottom: 0; height: 190px;
+  background-image: url('/decor/hem.svg'); background-position: bottom center;
+}
+@media (max-width: 640px) { .decor-arch { height: 620px; } }

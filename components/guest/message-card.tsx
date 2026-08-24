@@ -18,9 +18,9 @@ export function MessageCard({ message, variant = 'carousel' }: Props) {
   const body = isCarousel ? truncateMessage(message.message).text : message.message
 
   return (
-    <Card className="h-full rounded-3xl border-2 border-white bg-white/80 p-0 shadow-[0_16px_30px_-16px_rgba(193,110,114,0.45)]">
+    <Card className="h-full rounded-3xl border-2 border-white bg-white/80 p-0 shadow-[0_16px_30px_-16px_rgba(79,88,59,0.22)]">
       <CardContent className="space-y-3 p-5">
-        <span aria-hidden="true" className="font-script block text-4xl leading-none text-[#e0aeae]">
+        <span aria-hidden="true" className="font-script block text-4xl leading-none text-decor">
           &ldquo;
         </span>
         <p

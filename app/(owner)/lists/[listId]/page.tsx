@@ -113,17 +113,25 @@ export default async function ListPage({
               {list.status === 'open' ? 'aberta' : 'fechada'}
             </Badge>
           </div>
-          {list.couple_names && (
-            <p className="text-muted-foreground">{list.couple_names}</p>
+          {list.honoree_names && (
+            <p className="text-muted-foreground">{list.honoree_names}</p>
           )}
-          {list.event_date && (
+          {(list.event_date || list.event_time) && (
             <p className="text-sm text-muted-foreground">
-              {new Date(list.event_date).toLocaleDateString('pt-BR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              {list.event_date &&
+                new Date(list.event_date).toLocaleDateString('pt-BR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              {list.event_date && list.event_time && ' · '}
+              {list.event_time && list.event_time.slice(0, 5)}
+            </p>
+          )}
+          {(list.venue_name || list.venue_address || list.venue_city) && (
+            <p className="text-sm text-muted-foreground">
+              {[list.venue_name, list.venue_address, list.venue_city].filter(Boolean).join(' · ')}
             </p>
           )}
         </div>

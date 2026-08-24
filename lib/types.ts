@@ -40,13 +40,27 @@ export type Selection = {
   id: string
   gift_id: string
   guest_name: string
-  message: string | null
   created_at: string
 }
 
 export type SelectionWithGift = Selection & {
   gifts: Pick<Gift, 'name'>
 }
+
+export type ListMessage = {
+  id: string
+  list_id: string
+  guest_name: string
+  message: string
+  is_hidden: boolean
+  created_at: string
+}
+
+/**
+ * The only shape ever sent to the public guest page. Omits list_id and is_hidden —
+ * and there is no gift field to omit (FR-5.8).
+ */
+export type PublicMessage = Pick<ListMessage, 'id' | 'guest_name' | 'message' | 'created_at'>
 
 export type ActionState =
   | { error: string; success?: never }

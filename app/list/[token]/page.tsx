@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import { SelectionForm } from '@/components/guest/selection-form'
-import type { GiftWithSlots } from '@/lib/types'
+import { MessagesSection } from '@/components/guest/messages-section'
+import { MESSAGES_FETCH_LIMIT } from '@/lib/messages'
+import type { GiftWithSlots, PublicMessage } from '@/lib/types'
 
 export default async function GuestListPage({
   params,
@@ -50,6 +52,20 @@ export default async function GuestListPage({
 
   // Only expose available gifts to guests (BR-2)
   const availableGifts = giftsWithSlots.filter((g) => g.slots_used < g.max_count)
+
+  // Two invariants enforced here, because the service-role client bypasses RLS:
+  //   BR-8   — hidden messages are never returned.
+  //   FR-5.8 — explicit column list; list_messages has no gift_id, so a guest can
+  //            never be tied to a gift. Never select('*') here.
+  const { data: messageRows, count: messagesTotal } = await supabase
+    .from('list_messages')
+    .select('id, guest_name, message, created_at', { count: 'exact' })
+    .eq('list_id', list.id)
+    .eq('is_hidden', false)
+    .order('created_at', { ascending: false })
+    .limit(MESSAGES_FETCH_LIMIT)
+
+  const messages: PublicMessage[] = messageRows ?? []
 
   return (
     <div className="bg-romantic min-h-screen">
@@ -105,6 +121,22 @@ export default async function GuestListPage({
             </>
           )}
         </div>
+
+        {/* Mensagens de carinho — placed before the closed/SelectionForm block so
+            it stays above SelectionForm's fixed bottom-0 sticky bar, and remains
+            visible on a closed list (FR-2.5 stops new selections, not memories). */}
+        {messages.length > 0 && (
+          <>
+            <div className="my-10 flex items-center justify-center" aria-hidden="true">
+              <span className="h-px w-16 bg-[#ebc4c4]" />
+              <svg viewBox="0 0 24 24" className="mx-3 h-5 w-5 fill-[#d98e8e]">
+                <path d="M12 18s-8-5.2-8-10.2A4 4 0 0112 5a4 4 0 018 2.8C20 12.8 12 18 12 18z" />
+              </svg>
+              <span className="h-px w-16 bg-[#ebc4c4]" />
+            </div>
+            <MessagesSection messages={messages} total={messagesTotal ?? messages.length} />
+          </>
+        )}
 
 
         {/* Closed state */}

@@ -2,11 +2,9 @@
 
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { createClient } from '@/lib/supabase/server'
 import { CATEGORY_NAME_REGEX, normalizeCategoryName } from '@/lib/gift-sections'
+import { getAuthenticatedUser, assertListOwnership, type SupabaseServerClient } from '@/lib/auth-guards'
 import type { ActionState } from '@/lib/types'
-
-type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
 const categorySchema = z.object({
   name: z
@@ -18,29 +16,6 @@ const categorySchema = z.object({
 })
 
 const UNIQUE_VIOLATION = '23505'
-
-async function getAuthenticatedUser() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
-  return { supabase, user }
-}
-
-async function assertListOwnership(
-  supabase: SupabaseServerClient,
-  listId: string,
-  userId: string
-) {
-  const { data: list } = await supabase
-    .from('lists')
-    .select('id')
-    .eq('id', listId)
-    .eq('owner_id', userId)
-    .single()
-  return !!list
-}
 
 export async function createCategoryAction(
   _prev: ActionState,

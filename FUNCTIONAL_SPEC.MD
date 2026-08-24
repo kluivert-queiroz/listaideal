@@ -1,7 +1,7 @@
 # Functional Specification — ListaIdeal (Wedding Gift List)
 
 **Status:** Draft
-**Last updated:** 2026-06-04
+**Last updated:** 2026-08-24
 
 ---
 
@@ -48,7 +48,9 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **Gift** — An item on a list with a name, optional image, optional store link, and a
   **maximum selection count**.
 - **Selection** — A guest's reservation of a single slot of a gift. Carries the guest's
-  name and an optional message.
+  name.
+- **Message** — Text a guest leaves alongside a submission. Belongs to the **list**, not
+  to any specific gift, and is shown publicly with the guest's name (see FR-5.9).
 - **Slot** — One unit of a gift's maximum count. A gift with `max = 3` has 3 slots.
   Each guest selection consumes exactly **one** slot.
 
@@ -99,9 +101,13 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **FR-4.1** For each gift, the owner can see:
   - Slots used vs. total (e.g. "2 of 3 selected").
   - Whether the gift is currently hidden (max reached).
-- **FR-4.2** For each selection, the owner can see the guest's **name**, **message**,
-  and **timestamp**.
+- **FR-4.2** For each selection, the owner can see the guest's **name** and
+  **timestamp**. (Messages are shown separately — see FR-4.4 — since a message
+  belongs to the list, not to any one selection; see BR-9.)
 - **FR-4.3** The owner can view all selections for a list in one place.
+- **FR-4.4** The owner can **hide** or **unhide** an individual guest message. A
+  hidden message is never shown on the public page (see FR-5.9); the owner still
+  sees it, marked as hidden.
 
 ### 4.5 Guest — Browsing & selecting
 
@@ -117,8 +123,17 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **FR-5.5** On submit, each selected gift consumes **one slot**.
 - **FR-5.6** After submitting, the guest sees a confirmation of what they reserved.
 - **FR-5.7** Guests **cannot** edit or cancel a selection after submitting.
-- **FR-5.8** Guests do **not** see who else selected gifts or how many slots remain
-  (only that a gift is available or absent). (See open question OQ-3.)
+- **FR-5.8** Guests do **not** see who else selected gifts, which gifts any other guest
+  chose, or how many slots remain (only that a gift is available or absent). Guest
+  **names and messages** are shown publicly (FR-5.9); what stays private is the
+  **name↔gift mapping**. (See open question OQ-3.)
+- **FR-5.9** The public list page shows a **"Mensagens de carinho"** section: a
+  carousel of the most recent guest messages, plus a modal ("Ver todas") listing all
+  of them. Each card/row shows only the guest's **name** and **message** — never the
+  gift(s) they chose, reinforcing FR-5.8. The section is hidden entirely when there
+  are no visible messages.
+- **FR-5.10** The "Mensagens de carinho" section remains visible on a **closed**
+  list — FR-2.5 stops new *selections*, not the display of existing messages.
 
 ### 4.6 Selection integrity
 
@@ -150,12 +165,16 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 5. Guest submits.
 6. System reserves one slot per selected gift and shows a confirmation.
 7. Any gift that reached its max as a result becomes hidden for future guests.
+8. If the guest left a message and reserved at least one gift (BR-7), the message
+   appears in the public "Mensagens de carinho" section (FR-5.9) — with the guest's
+   name, but never the gift(s) they chose.
 
 ### 5.3 Owner reviews selections
 
 1. Owner logs in and opens the list.
-2. Owner sees per-gift slot usage and the full list of selections (name, message,
-   timestamp).
+2. Owner sees per-gift slot usage and the full list of selections (name, timestamp),
+   plus the full list of guest messages (name, message, timestamp), and can hide/unhide
+   any message.
 
 ---
 
@@ -169,6 +188,12 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **BR-5** The owner's max-count cannot be set below the current `slots_used`.
 - **BR-6** Share links must be unguessable (e.g. a random token), since there is no
   guest authentication.
+- **BR-7** A message is recorded only when the guest supplied non-empty text **and**
+  successfully reserved at least one gift. A guest who reserved nothing (e.g. every
+  selected gift was already full) leaves no message, even if they typed one.
+- **BR-8** A hidden message (FR-4.4) is never returned to the public page.
+- **BR-9** A message belongs to a **list**, not to a gift; one guest submission
+  produces exactly one message, regardless of how many gifts it reserved.
 
 ---
 
@@ -181,8 +206,12 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
   `event_date`, `share_token`, `status` (open|closed), `created_at`.
 - **Gift**: `id`, `list_id`, `name`, `description`, `image`, `store_url`,
   `max_count`, `display_order`, `created_at`.
-- **Selection**: `id`, `gift_id`, `guest_name`, `message`, `created_at`.
+- **Selection**: `id`, `gift_id`, `guest_name`, `created_at`.
   - `slots_used` for a gift = count of its selections.
+  - No longer carries `message` — see **Message** below (BR-9).
+- **Message**: `id`, `list_id`, `guest_name`, `message`, `is_hidden`, `created_at`.
+  Deliberately has no `gift_id`: since a message is about the list rather than any
+  one gift, guests can never be tied to the gift(s) they chose through it (FR-5.8).
 
 ---
 
@@ -221,4 +250,9 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **OQ-5** Should a closed/deleted list keep historical selections visible to the owner
   indefinitely, or be purged?
 - **OQ-6** Any abuse/spam protection needed on the public guest form (e.g. rate limiting,
-  captcha)?
+  captcha)? **Raised in priority as of FR-5.9**: guest-submitted text is now rendered on
+  the public page, not just seen privately by the owner. Current mitigations are BR-7
+  (a message requires a successful reservation, so the message rate is capped by the
+  number of free gift slots) and FR-4.4 (owner can hide any message after the fact).
+  Still open: share-link entropy is unchanged from what it was when a guessed link only
+  exposed gift selection.

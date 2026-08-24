@@ -66,7 +66,22 @@ create table if not exists public.selections (
   id         uuid        primary key default gen_random_uuid(),
   gift_id    uuid        not null references public.gifts(id) on delete cascade,
   guest_name text        not null,
-  message    text,
+  created_at timestamptz not null default now()
+);
+
+-- A message belongs to a LIST, not to a gift: one guest submission produces exactly
+-- one message no matter how many gifts it reserved. Deliberately has no gift_id —
+-- guests must never be able to map a name to a gift (FR-5.8), and omitting the
+-- column makes that leak impossible rather than merely avoided.
+create table if not exists public.list_messages (
+  id         uuid        primary key default gen_random_uuid(),
+  list_id    uuid        not null references public.lists(id) on delete cascade,
+  guest_name text        not null check (char_length(btrim(guest_name)) > 0),
+  message    text        not null check (
+                           char_length(btrim(message)) > 0
+                           and char_length(message) <= 1000   -- matches the zod cap
+                         ),
+  is_hidden  boolean     not null default false,
   created_at timestamptz not null default now()
 );
 
@@ -79,12 +94,22 @@ create index if not exists gift_categories_list_id_idx on public.gift_categories
 create unique index if not exists gift_categories_list_name_idx on public.gift_categories(list_id, lower(name));
 create index if not exists gifts_category_id_idx on public.gifts(list_id, category_id);
 
+-- Owner dashboard: whole list, newest first.
+create index if not exists list_messages_list_id_idx
+  on public.list_messages(list_id, created_at desc);
+
+-- Public page: visible messages only, newest first.
+create index if not exists list_messages_visible_idx
+  on public.list_messages(list_id, created_at desc)
+  where is_hidden = false;
+
 -- ── Row-Level Security ────────────────────────────────────────────────────────
 
 alter table public.lists          enable row level security;
 alter table public.gifts          enable row level security;
 alter table public.selections     enable row level security;
 alter table public.gift_categories enable row level security;
+alter table public.list_messages  enable row level security;
 
 -- Lists: owners manage their own lists
 create policy "owners_manage_lists" on public.lists
@@ -126,14 +151,28 @@ create policy "owners_manage_gift_categories" on public.gift_categories
     )
   );
 
+-- Messages: owners manage (read/hide) messages on their own lists.
+-- `for all using (...)` also gates INSERT: Postgres reuses the USING expression
+-- as WITH CHECK when WITH CHECK is omitted.
+-- No anon policy, consistent with the rest of the schema — the public page reads via
+-- the service-role client and MUST filter is_hidden = false itself (BR-8).
+create policy "owners_manage_list_messages" on public.list_messages
+  for all
+  using (
+    exists (
+      select 1 from public.lists
+      where lists.id = list_messages.list_id
+        and lists.owner_id = auth.uid()
+    )
+  );
+
 -- ── Atomic slot-claim function ───────────────────────────────────────────────
 -- Called server-side with the service role key; the FOR UPDATE lock prevents
 -- two concurrent guests from both taking the last slot of a gift.
 
 create or replace function public.claim_gift_slot(
-  p_gift_id   uuid,
-  p_guest_name text,
-  p_message   text
+  p_gift_id    uuid,
+  p_guest_name text
 )
 returns jsonb
 language plpgsql
@@ -164,12 +203,8 @@ begin
     return jsonb_build_object('success', false, 'error', 'no_slots');
   end if;
 
-  insert into public.selections (gift_id, guest_name, message)
-  values (
-    p_gift_id,
-    p_guest_name,
-    nullif(trim(coalesce(p_message, '')), '')
-  )
+  insert into public.selections (gift_id, guest_name)
+  values (p_gift_id, p_guest_name)
   returning id into v_new_id;
 
   return jsonb_build_object('success', true, 'id', v_new_id);

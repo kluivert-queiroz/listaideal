@@ -29,6 +29,16 @@ Key implementation notes:
 - Service role key used server-side for guest operations (no guest auth)
 - `claim_gift_slot` SQL function provides atomic slot reservation (FOR UPDATE lock)
 - `NEXT_PUBLIC_SITE_URL` env var needed for share links and password reset redirect
+- A guest message belongs to the **list**, not to a gift — stored in its own
+  `list_messages` table (`id`, `list_id`, `guest_name`, `message`, `is_hidden`,
+  `created_at`), not on `selections`. One guest submission produces exactly one
+  message row regardless of how many gifts it reserved. Chosen over grouping
+  duplicated per-gift rows in TypeScript (see [[keep-business-logic-in-code-not-db]])
+  because fixing the schema's grain removed the need for grouping logic entirely,
+  and because the row having no `gift_id` makes the guest↔gift privacy rule
+  (FR-5.8) structurally impossible to leak rather than merely policy-enforced.
+  Public page renders these in a "Mensagens de carinho" carousel + "Ver todas"
+  modal; owner dashboard can hide/unhide individual messages.
 
 Setup steps not yet done (user must do these):
 1. Create Supabase project, run `supabase/schema.sql` in SQL editor

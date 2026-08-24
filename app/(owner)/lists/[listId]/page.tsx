@@ -6,6 +6,7 @@ import {
   deleteListAction,
 } from '@/app/actions/lists'
 import { createGiftAction } from '@/app/actions/gifts'
+import { toggleMessageVisibilityAction } from '@/app/actions/messages'
 import { GiftRow } from '@/components/gifts/gift-row'
 import { GiftForm } from '@/components/gifts/gift-form'
 import { CategoryManager } from '@/components/categories/category-manager'
@@ -15,7 +16,8 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { groupGiftsIntoSections } from '@/lib/gift-sections'
-import type { GiftWithSlots, SelectionWithGift } from '@/lib/types'
+import { MESSAGES_EMPTY_OWNER, MESSAGES_TITLE } from '@/lib/messages'
+import type { GiftWithSlots, SelectionWithGift, ListMessage } from '@/lib/types'
 
 export default async function ListPage({
   params,
@@ -83,6 +85,14 @@ export default async function ListPage({
     .from('selections')
     .select('*, gifts!inner(name)')
     .in('gift_id', giftIds)
+    .order('created_at', { ascending: false })
+
+  // RLS-scoped via the cookie-bound client, so select('*') is fine — this is the
+  // owner's own data, and is_hidden is needed for the hide/unhide toggle.
+  const { data: messages } = await supabase
+    .from('list_messages')
+    .select('*')
+    .eq('list_id', listId)
     .order('created_at', { ascending: false })
 
   const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/list/${list.share_token}`
@@ -209,6 +219,64 @@ export default async function ListPage({
 
       <Separator />
 
+      {/* Mensagens de carinho */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">
+          {MESSAGES_TITLE} ({(messages ?? []).length})
+        </h2>
+        <p className="text-xs text-muted-foreground">
+          Mensagens ocultas não aparecem na página pública. Os presentes escolhidos
+          nunca são mostrados aos convidados.
+        </p>
+        {!messages?.length ? (
+          <p className="text-muted-foreground text-sm">{MESSAGES_EMPTY_OWNER}</p>
+        ) : (
+          <Card>
+            <CardContent className="divide-y p-0">
+              {(messages as ListMessage[]).map((m) => (
+                <div key={m.id} className="flex items-start gap-3 px-4 py-3 text-sm">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium">{m.guest_name}</span>
+                      {m.is_hidden && (
+                        <Badge variant="secondary" className="text-xs">
+                          Oculta
+                        </Badge>
+                      )}
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(m.created_at).toLocaleDateString('pt-BR', {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                    <p
+                      className={`mt-1 whitespace-pre-wrap break-words text-muted-foreground ${
+                        m.is_hidden ? 'opacity-60' : ''
+                      }`}
+                    >
+                      {m.message}
+                    </p>
+                  </div>
+                  <form action={toggleMessageVisibilityAction} className="shrink-0">
+                    <input type="hidden" name="message_id" value={m.id} />
+                    <input type="hidden" name="list_id" value={listId} />
+                    <input type="hidden" name="is_hidden" value={m.is_hidden ? 'false' : 'true'} />
+                    <Button type="submit" variant="ghost" size="sm" className="h-7 px-2 text-xs">
+                      {m.is_hidden ? 'Mostrar' : 'Ocultar'}
+                    </Button>
+                  </form>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      <Separator />
+
       {/* Selections */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">
@@ -224,9 +292,6 @@ export default async function ListPage({
                   <span className="font-medium">{s.guest_name}</span>
                   {' escolheu '}
                   <span className="font-medium">{s.gifts?.name}</span>
-                  {s.message && (
-                    <span className="text-muted-foreground"> — &ldquo;{s.message}&rdquo;</span>
-                  )}
                   <span className="text-xs text-muted-foreground ml-2">
                     {new Date(s.created_at).toLocaleDateString('pt-BR', {
                       day: 'numeric',

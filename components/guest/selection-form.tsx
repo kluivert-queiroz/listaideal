@@ -12,16 +12,18 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
-import type { GiftWithSlots } from '@/lib/types'
+import { groupGiftsIntoSections } from '@/lib/gift-sections'
+import type { GiftCategory, GiftWithSlots } from '@/lib/types'
 
 type Step = 'select' | 'details'
 
 type Props = {
   gifts: GiftWithSlots[]
+  categories: GiftCategory[]
   listToken: string
 }
 
-export function SelectionForm({ gifts, listToken }: Props) {
+export function SelectionForm({ gifts, categories, listToken }: Props) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [step, setStep] = useState<Step>('select')
   const [result, action, pending] = useActionState<
@@ -112,82 +114,96 @@ export function SelectionForm({ gifts, listToken }: Props) {
               Nenhum presente disponível no momento.
             </p>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {gifts.map((gift) => {
-                const selected = selectedIds.has(gift.id)
-                return (
-                  <Card
-                    key={gift.id}
-                    role="button"
-                    tabIndex={0}
-                    aria-pressed={selected}
-                    onClick={() => toggle(gift.id)}
-                    onKeyDown={(e) =>
-                      (e.key === ' ' || e.key === 'Enter') &&
-                      (e.preventDefault(), toggle(gift.id))
-                    }
-                    className={`group relative cursor-pointer select-none overflow-hidden rounded-3xl border-2 p-0 outline-none transition-all duration-300 shadow-[0_16px_30px_-16px_rgba(193,110,114,0.45)] hover:-translate-y-1 hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_-16px_rgba(193,110,114,0.55)] focus-visible:ring-2 focus-visible:ring-ring ${
-                      selected ? 'border-[#d98e8e]' : 'border-white'
-                    }`}
-                  >
-                    {/* Wax-seal heart */}
-                    <span
-                      className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full text-base text-white shadow-[0_4px_10px_-2px_rgba(193,110,114,0.6)] transition-all duration-300 ${
-                        selected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-                      }`}
-                      style={{
-                        background:
-                          'radial-gradient(circle at 35% 30%, #e59a9e, #c16e72)',
-                      }}
-                    >
-                      ♥
-                    </span>
+            (() => {
+              const sections = groupGiftsIntoSections(gifts, categories)
+              const showHeadings = !(sections.length === 1 && sections[0].id === null)
 
-                    {gift.image_url ? (
-                      <div className="relative h-44 w-full bg-white">
-                        <Image
-                          src={gift.image_url}
-                          alt={gift.name}
-                          fill
-                          objectFit="contain"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="(min-width: 640px) 50vw, 100vw"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex h-44 w-full items-center justify-center bg-muted text-4xl">
-                        🎁
-                      </div>
-                    )}
-
-                    <CardContent className="space-y-1 p-4">
-                      <p className="font-medium leading-snug">{gift.name}</p>
-                      {gift.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {gift.description}
-                        </p>
-                      )}
-                      {gift.price != null && (
-                        <p className="text-sm font-medium text-foreground">
-                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}
-                        </p>
-                      )}
-                      {gift.store_url && (
-                        <a
-                          href={gift.store_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="inline-block pt-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+              return sections.map((section) => (
+                <div key={section.id ?? 'uncategorized'} className="space-y-4">
+                  {showHeadings && (
+                    <h3 className="font-script text-2xl text-primary leading-none text-center">
+                      {section.label}
+                    </h3>
+                  )}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {section.gifts.map((gift) => {
+                      const selected = selectedIds.has(gift.id)
+                      return (
+                        <Card
+                          key={gift.id}
+                          role="button"
+                          tabIndex={0}
+                          aria-pressed={selected}
+                          onClick={() => toggle(gift.id)}
+                          onKeyDown={(e) =>
+                            (e.key === ' ' || e.key === 'Enter') &&
+                            (e.preventDefault(), toggle(gift.id))
+                          }
+                          className={`group relative cursor-pointer select-none overflow-hidden rounded-3xl border-2 p-0 outline-none transition-all duration-300 shadow-[0_16px_30px_-16px_rgba(193,110,114,0.45)] hover:-translate-y-1 hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_-16px_rgba(193,110,114,0.55)] focus-visible:ring-2 focus-visible:ring-ring ${
+                            selected ? 'border-[#d98e8e]' : 'border-white'
+                          }`}
                         >
-                          Ver item →
-                        </a>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
+                          {/* Wax-seal heart */}
+                          <span
+                            className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full text-base text-white shadow-[0_4px_10px_-2px_rgba(193,110,114,0.6)] transition-all duration-300 ${
+                              selected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+                            }`}
+                            style={{
+                              background:
+                                'radial-gradient(circle at 35% 30%, #e59a9e, #c16e72)',
+                            }}
+                          >
+                            ♥
+                          </span>
+
+                          {gift.image_url ? (
+                            <div className="relative h-44 w-full bg-white">
+                              <Image
+                                src={gift.image_url}
+                                alt={gift.name}
+                                fill
+                                objectFit="contain"
+                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                sizes="(min-width: 640px) 50vw, 100vw"
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex h-44 w-full items-center justify-center bg-muted text-4xl">
+                              🎁
+                            </div>
+                          )}
+
+                          <CardContent className="space-y-1 p-4">
+                            <p className="font-medium leading-snug">{gift.name}</p>
+                            {gift.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                {gift.description}
+                              </p>
+                            )}
+                            {gift.price != null && (
+                              <p className="text-sm font-medium text-foreground">
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}
+                              </p>
+                            )}
+                            {gift.store_url && (
+                              <a
+                                href={gift.store_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-block pt-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+                              >
+                                Ver item →
+                              </a>
+                            )}
+                          </CardContent>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))
+            })()
           )}
 
           {/* Sticky action bar */}

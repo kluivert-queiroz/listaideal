@@ -7,16 +7,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import type { ActionState, Gift } from '@/lib/types'
+import type { ActionState, Gift, GiftCategory } from '@/lib/types'
 
 type Props = {
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>
   listId: string
   gift?: Gift
+  categories: GiftCategory[]
   onSuccess?: () => void
 }
 
-export function GiftForm({ action, listId, gift, onSuccess }: Props) {
+export function GiftForm({ action, listId, gift, categories, onSuccess }: Props) {
+  const datalistId = `gift-categories-${gift?.id ?? 'new'}`
+  const currentCategoryName = categories.find((c) => c.id === gift?.category_id)?.name ?? ''
   const [state, formAction, pending] = useActionState(action, undefined)
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -85,6 +88,23 @@ export function GiftForm({ action, listId, gift, onSuccess }: Props) {
             placeholder="0,00"
             defaultValue={gift?.price ?? ''}
           />
+        </div>
+
+        <div className="col-span-2 space-y-2">
+          <Label htmlFor="category">Categoria (opcional)</Label>
+          <Input
+            id="category"
+            name="category"
+            list={datalistId}
+            placeholder="Cozinha, Quarto, Lua de mel…"
+            defaultValue={currentCategoryName}
+            maxLength={60}
+          />
+          <datalist id={datalistId}>
+            {categories.map((c) => (
+              <option key={c.id} value={c.name} />
+            ))}
+          </datalist>
         </div>
 
         <div className="col-span-2 space-y-2">

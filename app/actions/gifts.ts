@@ -3,6 +3,8 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { resolveCategoryId } from '@/app/actions/categories'
+import { CATEGORY_NAME_REGEX } from '@/lib/gift-sections'
 import type { ActionState } from '@/lib/types'
 
 const giftSchema = z.object({
@@ -13,6 +15,13 @@ const giftSchema = z.object({
   price: z.coerce
     .number()
     .positive('O preço deve ser maior que zero.')
+    .optional(),
+  category: z
+    .string()
+    .trim()
+    .max(60, 'A categoria deve ter no máximo 60 caracteres.')
+    .regex(CATEGORY_NAME_REGEX, 'A categoria contém caracteres inválidos.')
+    .or(z.literal(''))
     .optional(),
   max_count: z.coerce
     .number()
@@ -29,6 +38,20 @@ async function getAuthenticatedUser() {
   return { supabase, user }
 }
 
+async function assertListOwnership(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  listId: string,
+  userId: string
+) {
+  const { data: list } = await supabase
+    .from('lists')
+    .select('id')
+    .eq('id', listId)
+    .eq('owner_id', userId)
+    .single()
+  return !!list
+}
+
 export async function createGiftAction(
   _prev: ActionState,
   formData: FormData
@@ -42,12 +65,21 @@ export async function createGiftAction(
     image_url: formData.get('image_url') || undefined,
     store_url: formData.get('store_url') || undefined,
     price: formData.get('price') || undefined,
+    category: formData.get('category') || undefined,
     max_count: formData.get('max_count'),
   })
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
-  const { supabase } = await getAuthenticatedUser()
+  const { supabase, user } = await getAuthenticatedUser()
+
+  if (!(await assertListOwnership(supabase, listId, user.id))) {
+    return { error: 'Lista não encontrada.' }
+  }
+
+  const { name, description, image_url, store_url, price, category, max_count } = parsed.data
+
+  const categoryId = await resolveCategoryId(supabase, listId, category)
 
   // Assign display_order as the next slot in this list
   const { count } = await supabase
@@ -56,10 +88,13 @@ export async function createGiftAction(
     .eq('list_id', listId)
 
   const { error } = await supabase.from('gifts').insert({
-    ...parsed.data,
-    image_url: parsed.data.image_url || null,
-    store_url: parsed.data.store_url || null,
-    price: parsed.data.price ?? null,
+    name,
+    description,
+    max_count,
+    image_url: image_url || null,
+    store_url: store_url || null,
+    price: price ?? null,
+    category_id: categoryId,
     list_id: listId,
     display_order: (count ?? 0) + 1,
   })
@@ -84,12 +119,17 @@ export async function updateGiftAction(
     image_url: formData.get('image_url') || undefined,
     store_url: formData.get('store_url') || undefined,
     price: formData.get('price') || undefined,
+    category: formData.get('category') || undefined,
     max_count: formData.get('max_count'),
   })
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
-  const { supabase } = await getAuthenticatedUser()
+  const { supabase, user } = await getAuthenticatedUser()
+
+  if (!(await assertListOwnership(supabase, listId, user.id))) {
+    return { error: 'Lista não encontrada.' }
+  }
 
   // Enforce BR-5: max_count cannot go below current slots_used
   const { count: slotsUsed } = await supabase
@@ -103,13 +143,20 @@ export async function updateGiftAction(
     }
   }
 
+  const { name, description, image_url, store_url, price, category, max_count } = parsed.data
+
+  const categoryId = await resolveCategoryId(supabase, listId, category)
+
   const { error } = await supabase
     .from('gifts')
     .update({
-      ...parsed.data,
-      image_url: parsed.data.image_url || null,
-      store_url: parsed.data.store_url || null,
-      price: parsed.data.price ?? null,
+      name,
+      description,
+      max_count,
+      image_url: image_url || null,
+      store_url: store_url || null,
+      price: price ?? null,
+      category_id: categoryId,
     })
     .eq('id', giftId)
 
@@ -138,19 +185,26 @@ export async function reorderGiftAction(formData: FormData) {
 
   const { data: gifts } = await supabase
     .from('gifts')
-    .select('id, display_order')
+    .select('id, display_order, category_id')
     .eq('list_id', listId)
     .order('display_order', { ascending: true })
 
   if (!gifts) return
 
-  const idx = gifts.findIndex((g) => g.id === giftId)
+  const target = gifts.find((g) => g.id === giftId)
+  if (!target) return
+
+  // Reorder only within the same section (category), otherwise the swap
+  // either jumps the gift into a different section or is visually a no-op.
+  const siblings = gifts.filter((g) => g.category_id === target.category_id)
+
+  const idx = siblings.findIndex((g) => g.id === giftId)
   const swapIdx = direction === 'up' ? idx - 1 : idx + 1
 
-  if (swapIdx < 0 || swapIdx >= gifts.length) return
+  if (swapIdx < 0 || swapIdx >= siblings.length) return
 
-  const a = gifts[idx]
-  const b = gifts[swapIdx]
+  const a = siblings[idx]
+  const b = siblings[swapIdx]
 
   await supabase
     .from('gifts')

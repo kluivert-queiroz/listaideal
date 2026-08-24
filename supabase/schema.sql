@@ -40,6 +40,14 @@ create table if not exists public.lists (
   created_at   timestamptz not null default now()
 );
 
+create table if not exists public.gift_categories (
+  id            uuid        primary key default gen_random_uuid(),
+  list_id       uuid        not null references public.lists(id) on delete cascade,
+  name          text        not null,
+  display_order integer     not null default 0,
+  created_at    timestamptz not null default now()
+);
+
 create table if not exists public.gifts (
   id            uuid        primary key default gen_random_uuid(),
   list_id       uuid        not null references public.lists(id) on delete cascade,
@@ -48,6 +56,7 @@ create table if not exists public.gifts (
   image_url     text,
   store_url     text,
   price         numeric(10,2),
+  category_id   uuid        references public.gift_categories(id) on delete set null,
   max_count     integer     not null default 1 check (max_count >= 1),
   display_order integer     not null default 0,
   created_at    timestamptz not null default now()
@@ -66,12 +75,16 @@ create table if not exists public.selections (
 create index if not exists gifts_list_id_idx      on public.gifts(list_id);
 create index if not exists gifts_display_order_idx on public.gifts(list_id, display_order);
 create index if not exists selections_gift_id_idx  on public.selections(gift_id);
+create index if not exists gift_categories_list_id_idx on public.gift_categories(list_id, display_order);
+create unique index if not exists gift_categories_list_name_idx on public.gift_categories(list_id, lower(name));
+create index if not exists gifts_category_id_idx on public.gifts(list_id, category_id);
 
 -- ── Row-Level Security ────────────────────────────────────────────────────────
 
-alter table public.lists      enable row level security;
-alter table public.gifts      enable row level security;
-alter table public.selections enable row level security;
+alter table public.lists          enable row level security;
+alter table public.gifts          enable row level security;
+alter table public.selections     enable row level security;
+alter table public.gift_categories enable row level security;
 
 -- Lists: owners manage their own lists
 create policy "owners_manage_lists" on public.lists
@@ -99,6 +112,17 @@ create policy "owners_read_selections" on public.selections
       join public.lists l on l.id = g.list_id
       where g.id = selections.gift_id
         and l.owner_id = auth.uid()
+    )
+  );
+
+-- Categories: owners manage categories on their own lists
+create policy "owners_manage_gift_categories" on public.gift_categories
+  for all
+  using (
+    exists (
+      select 1 from public.lists
+      where lists.id = gift_categories.list_id
+        and lists.owner_id = auth.uid()
     )
   );
 

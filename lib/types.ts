@@ -10,6 +10,14 @@ export type List = {
   created_at: string
 }
 
+export type GiftCategory = {
+  id: string
+  list_id: string
+  name: string
+  display_order: number
+  created_at: string
+}
+
 export type Gift = {
   id: string
   list_id: string
@@ -18,6 +26,7 @@ export type Gift = {
   image_url: string | null
   store_url: string | null
   price: number | null
+  category_id: string | null
   max_count: number
   display_order: number
   created_at: string

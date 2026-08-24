@@ -27,6 +27,12 @@ export default async function GuestListPage({
 
   const giftIds = (gifts ?? []).map((g) => g.id)
 
+  const { data: categories } = await supabase
+    .from('gift_categories')
+    .select('*')
+    .eq('list_id', list.id)
+    .order('display_order', { ascending: true })
+
   const { data: selectionRows } = await supabase
     .from('selections')
     .select('gift_id')
@@ -112,7 +118,7 @@ export default async function GuestListPage({
             </p>
           </div>
         ) : (
-          <SelectionForm gifts={availableGifts} listToken={token} />
+          <SelectionForm gifts={availableGifts} categories={categories ?? []} listToken={token} />
         )}
       </div>
     </div>

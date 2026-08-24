@@ -8,11 +8,13 @@ import {
 import { createGiftAction } from '@/app/actions/gifts'
 import { GiftRow } from '@/components/gifts/gift-row'
 import { GiftForm } from '@/components/gifts/gift-form'
+import { CategoryManager } from '@/components/categories/category-manager'
 import { CopyLink } from '@/components/lists/copy-link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { groupGiftsIntoSections } from '@/lib/gift-sections'
 import type { GiftWithSlots, SelectionWithGift } from '@/lib/types'
 
 export default async function ListPage({
@@ -45,6 +47,22 @@ export default async function ListPage({
 
   const gifts = giftsRaw ?? []
   const giftIds = gifts.map((g) => g.id)
+
+  const { data: categoriesRaw } = await supabase
+    .from('gift_categories')
+    .select('*')
+    .eq('list_id', listId)
+    .order('display_order', { ascending: true })
+
+  const categories = categoriesRaw ?? []
+
+  const giftCountByCategory = gifts.reduce(
+    (acc, g) => {
+      if (g.category_id) acc[g.category_id] = (acc[g.category_id] ?? 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
 
   const { data: selectionRows } = await supabase
     .from('selections')
@@ -139,32 +157,52 @@ export default async function ListPage({
 
       <Separator />
 
+      {/* Categories */}
+      {(categories.length > 0 || gifts.length > 0) && (
+        <CategoryManager
+          listId={listId}
+          categories={categories}
+          giftCountByCategory={giftCountByCategory}
+        />
+      )}
+
       {/* Gifts */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Presentes ({gifts.length})</h2>
 
-        {giftsWithSlots.length > 0 && (
-          <Card>
-            <CardContent className="p-0 divide-y">
-              {giftsWithSlots.map((gift, i) => (
-                <div key={gift.id} className="px-4">
-                  <GiftRow
-                    gift={gift}
-                    isFirst={i === 0}
-                    isLast={i === giftsWithSlots.length - 1}
-                  />
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        )}
+        {(() => {
+          const sections = groupGiftsIntoSections(giftsWithSlots, categories)
+          const showHeadings = !(sections.length === 1 && sections[0].id === null)
+
+          return sections.map((section) => (
+            <div key={section.id ?? 'uncategorized'} className="space-y-2">
+              {showHeadings && (
+                <h3 className="text-sm font-medium text-muted-foreground">{section.label}</h3>
+              )}
+              <Card>
+                <CardContent className="p-0 divide-y">
+                  {section.gifts.map((gift, i) => (
+                    <div key={gift.id} className="px-4">
+                      <GiftRow
+                        gift={gift}
+                        categories={categories}
+                        isFirst={i === 0}
+                        isLast={i === section.gifts.length - 1}
+                      />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          ))
+        })()}
 
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">Adicionar presente</CardTitle>
           </CardHeader>
           <CardContent>
-            <GiftForm action={createGiftAction} listId={listId} />
+            <GiftForm action={createGiftAction} listId={listId} categories={categories} />
           </CardContent>
         </Card>
       </div>

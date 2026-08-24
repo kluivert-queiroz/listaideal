@@ -13,19 +13,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import type { GiftWithSlots } from '@/lib/types'
+import type { GiftCategory, GiftWithSlots } from '@/lib/types'
 
 export function GiftRow({
   gift,
+  categories,
   isFirst,
   isLast,
 }: {
   gift: GiftWithSlots
+  categories: GiftCategory[]
   isFirst: boolean
   isLast: boolean
 }) {
   const [editOpen, setEditOpen] = useState(false)
   const full = gift.slots_used >= gift.max_count
+  const categoryName = categories.find((c) => c.id === gift.category_id)?.name
 
   return (
     <div className="flex gap-3 items-start py-3 border-b last:border-0">
@@ -44,6 +47,11 @@ export function GiftRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-medium text-sm">{gift.name}</span>
+          {categoryName && (
+            <Badge variant="outline" className="text-xs">
+              {categoryName}
+            </Badge>
+          )}
           {full && (
             <Badge variant="secondary" className="text-xs">
               Esgotado
@@ -110,6 +118,7 @@ export function GiftRow({
               action={updateGiftAction}
               listId={gift.list_id}
               gift={gift}
+              categories={categories}
               onSuccess={() => setEditOpen(false)}
             />
           </DialogContent>

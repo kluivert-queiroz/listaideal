@@ -18,8 +18,9 @@ import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { groupGiftsIntoSections } from '@/lib/gift-sections'
 import { MESSAGES_EMPTY_OWNER, MESSAGES_TITLE } from '@/lib/messages'
+import { RSVP_EMPTY_OWNER, RSVP_TITLE, rsvpSummary } from '@/lib/rsvp'
 import { getSiteUrl } from '@/lib/utils'
-import type { GiftWithSlots, SelectionWithGift, ListMessage } from '@/lib/types'
+import type { GiftWithSlots, SelectionWithGift, ListMessage, Rsvp } from '@/lib/types'
 
 export default async function ListPage({
   params,
@@ -97,6 +98,19 @@ export default async function ListPage({
     .eq('list_id', listId)
     .order('created_at', { ascending: false })
 
+  // RLS-scoped via the cookie-bound client, so select('*') is fine — this is
+  // the owner's own data.
+  const { data: rsvpsRaw } = await supabase
+    .from('rsvps')
+    .select('*')
+    .eq('list_id', listId)
+    .order('created_at', { ascending: false })
+
+  const rsvps = (rsvpsRaw ?? []) as Rsvp[]
+  const confirmedRsvps = rsvps.filter((r) => r.is_attending)
+  const totalGuests = confirmedRsvps.reduce((sum, r) => sum + r.guest_count, 0)
+  const declinedRsvps = rsvps.length - confirmedRsvps.length
+
   const shareUrl = `${getSiteUrl()}/list/${list.share_token}`
 
   return (
@@ -110,7 +124,7 @@ export default async function ListPage({
             </Button>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="font-script text-4xl text-primary leading-none">{list.title}</h1>
+            <h1 className="font-heading text-4xl text-primary leading-none">{list.title}</h1>
             <Badge variant={list.status === 'open' ? 'default' : 'secondary'}>
               {list.status === 'open' ? 'aberta' : 'fechada'}
             </Badge>
@@ -174,6 +188,54 @@ export default async function ListPage({
           Envie este <Link className='text-blue-500' href={shareUrl} target='_blank' rel='noopener noreferrer'>link</Link> aos seus convidados — eles não precisam de conta.
         </p>
         <EditSlugForm listId={listId} slug={list.share_token} sitePrefix={`${getSiteUrl()}/list/`} />
+      </div>
+
+      <Separator />
+
+      {/* RSVPs */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">
+          {RSVP_TITLE} ({rsvps.length})
+        </h2>
+        {rsvps.length === 0 ? (
+          <p className="text-muted-foreground text-sm">{RSVP_EMPTY_OWNER}</p>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {rsvpSummary(confirmedRsvps.length, totalGuests, declinedRsvps)}
+            </p>
+            <Card>
+              <CardContent className="divide-y p-0">
+                {rsvps.map((r) => (
+                  <div
+                    key={r.id}
+                    className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium">{r.guest_name}</span>
+                      <Badge variant={r.is_attending ? 'default' : 'secondary'}>
+                        {r.is_attending ? 'Sim' : 'Não'}
+                      </Badge>
+                      {r.is_attending && (
+                        <span className="text-muted-foreground">
+                          {r.guest_count} {r.guest_count === 1 ? 'pessoa' : 'pessoas'}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(r.updated_at).toLocaleDateString('pt-BR', {
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       <Separator />

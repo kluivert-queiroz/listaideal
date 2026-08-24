@@ -68,6 +68,16 @@ export type ListMessage = {
  */
 export type PublicMessage = Pick<ListMessage, 'id' | 'guest_name' | 'message' | 'created_at'>
 
+export type Rsvp = {
+  id: string
+  list_id: string
+  guest_name: string
+  is_attending: boolean
+  guest_count: number
+  created_at: string
+  updated_at: string
+}
+
 export type ActionState =
   | { error: string; success?: never }
   | { success: string; error?: never }

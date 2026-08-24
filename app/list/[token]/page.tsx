@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import { SelectionForm } from '@/components/guest/selection-form'
+import { RsvpForm } from '@/components/guest/rsvp-form'
 import { MessagesSection } from '@/components/guest/messages-section'
 import { SleepingBee } from '@/components/decor/sleeping-bee'
 import { BeeDivider } from '@/components/decor/bee-divider'
@@ -128,6 +129,14 @@ export default async function GuestListPage({
             <p className="text-[0.85rem] text-muted-foreground">{list.venue_city}</p>
           )}
         </header>
+
+        <BeeDivider />
+
+        {/* RSVP — always visible regardless of list.status, same tier as messages
+            below: confirming attendance is event-logistics, not gift-inventory,
+            and is fully independent of the gift-selection flow (FR-5.10's
+            reasoning applies directly). */}
+        <RsvpForm listToken={token} />
 
         <BeeDivider />
 

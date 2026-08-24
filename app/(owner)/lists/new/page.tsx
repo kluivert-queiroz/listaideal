@@ -12,7 +12,7 @@ export default function NewListPage() {
         </Button>
       </div>
       <div>
-        <h1 className="font-script text-5xl text-primary leading-none">Nova lista de presentes</h1>
+        <h1 className="font-heading text-5xl text-primary leading-none">Nova lista de presentes</h1>
         <p className="text-muted-foreground text-sm mt-1">
           Preencha os detalhes. Você pode adicionar presentes após criar a lista.
         </p>

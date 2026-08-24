@@ -108,6 +108,9 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **FR-4.4** The owner can **hide** or **unhide** an individual guest message. A
   hidden message is never shown on the public page (see FR-5.9); the owner still
   sees it, marked as hidden.
+- **FR-4.5** The owner can see every guest's RSVP (name, attending yes/no, guest
+  count, submitted/updated timestamp) and a summary (confirmed count, total guest
+  count, declined count). See FR-7.x for the guest-facing RSVP flow.
 
 ### 4.5 Guest — Browsing & selecting
 
@@ -144,6 +147,19 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
   - The guest is told that gift is no longer available.
   - Any other still-available gifts in the same submission are still reserved.
   - (See open question OQ-4 for all-or-nothing vs. partial behavior.)
+
+### 4.7 Guest — RSVP
+
+- **FR-7.1** A guest can confirm attendance (yes/no) and, when attending, a total
+  guest count including themselves.
+- **FR-7.2** RSVP is one row per guest name per list (case-insensitive):
+  resubmitting with the same name updates the previous answer instead of creating
+  a duplicate.
+- **FR-7.3** RSVP is independent of gift selection — a guest may RSVP without
+  selecting a gift, select a gift without RSVPing, or do both. Neither flow
+  requires or blocks the other.
+- **FR-7.4** RSVP remains available on a **closed** list (see BR-10) — FR-2.5
+  stops new gift *selections*, not attendance confirmation.
 
 ---
 
@@ -194,6 +210,10 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **BR-8** A hidden message (FR-4.4) is never returned to the public page.
 - **BR-9** A message belongs to a **list**, not to a gift; one guest submission
   produces exactly one message, regardless of how many gifts it reserved.
+- **BR-10** An RSVP is independent of `list.status`: it stays available on a
+  closed list, the same way messages do (mirrors FR-5.10's reasoning).
+- **BR-11** An RSVP's guest count is capped at 20 and is 0 when not attending;
+  it must be at least 1 when attending (see FR-7.1).
 
 ---
 
@@ -212,6 +232,10 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
 - **Message**: `id`, `list_id`, `guest_name`, `message`, `is_hidden`, `created_at`.
   Deliberately has no `gift_id`: since a message is about the list rather than any
   one gift, guests can never be tied to the gift(s) they chose through it (FR-5.8).
+- **Rsvp**: `id`, `list_id`, `guest_name`, `is_attending`, `guest_count`,
+  `created_at`, `updated_at`. One row per guest name per list (case-insensitive);
+  independent of Selection and Message — none of the three share a key, so the
+  same person may appear under differently-typed names in each.
 
 ---
 
@@ -256,3 +280,5 @@ reached, the gift is **hidden** — no remaining guest can see or select it.
   number of free gift slots) and FR-4.4 (owner can hide any message after the fact).
   Still open: share-link entropy is unchanged from what it was when a guessed link only
   exposed gift selection.
+- **OQ-7** Should the owner be able to edit/correct a guest's RSVP (e.g. a
+  mistyped headcount), the way they can hide a message? Currently read-only.

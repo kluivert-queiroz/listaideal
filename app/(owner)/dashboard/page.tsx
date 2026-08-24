@@ -55,7 +55,7 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-script text-5xl text-primary leading-none">Minhas Listas</h1>
+          <h1 className="font-heading text-5xl text-primary leading-none">Minhas Listas</h1>
           <p className="text-muted-foreground text-sm mt-2">
             Gerencie suas listas de presentes
           </p>

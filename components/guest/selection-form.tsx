@@ -64,7 +64,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
       <div className="space-y-6 text-center py-10">
         <div className="text-5xl">🍯</div>
         <div className="space-y-1">
-          <h2 className="font-script text-5xl text-primary leading-none">
+          <h2 className="font-heading text-5xl text-primary leading-none">
             Obrigado, {result.guest_name}!
           </h2>
           <p className="text-muted-foreground">{CONFIRMATION_SUBTITLE}</p>
@@ -112,7 +112,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
       {step === 'select' && (
         <div className="space-y-6 pb-28">
           <div className="text-center">
-            <h2 className="font-script text-[2.9rem] text-script-ink leading-none">
+            <h2 className="font-heading text-[2.9rem] text-script-ink leading-none">
               {GIFTS_TITLE}
             </h2>
             <p className="text-sm text-muted-foreground mt-2">
@@ -132,7 +132,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
               return sections.map((section) => (
                 <div key={section.id ?? 'uncategorized'} className="space-y-7 mt-14">
                   {showHeadings && (
-                    <h3 className="font-script text-[2.5rem] text-primary leading-none text-center">
+                    <h3 className="font-heading text-[2.5rem] text-primary leading-none text-center">
                       {section.label}
                     </h3>
                   )}
@@ -243,7 +243,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
       {step === 'details' && (
         <div className="mx-auto max-w-md space-y-6">
           <div className="text-center">
-            <h2 className="font-script text-4xl text-primary leading-none">{DETAILS_TITLE}</h2>
+            <h2 className="font-heading text-4xl text-primary leading-none">{DETAILS_TITLE}</h2>
             <p className="text-sm text-muted-foreground mt-2">{DETAILS_SUBTITLE}</p>
           </div>
 

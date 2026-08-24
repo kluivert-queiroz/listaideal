@@ -9,9 +9,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-script);
+  --font-serif: var(--font-smallcaps);
   --font-script: var(--font-script);
-  --font-heading: var(--font-script);
+  --font-heading: var(--font-smallcaps);
   --font-smallcaps: var(--font-smallcaps);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

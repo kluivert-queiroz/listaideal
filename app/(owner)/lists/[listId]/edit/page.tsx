@@ -35,7 +35,7 @@ export default async function EditListPage({
         </Button>
       </div>
       <div>
-        <h1 className="font-script text-5xl text-primary leading-none">Editar lista</h1>
+        <h1 className="font-heading text-5xl text-primary leading-none">Editar lista</h1>
       </div>
       <ListForm
         action={updateListAction}

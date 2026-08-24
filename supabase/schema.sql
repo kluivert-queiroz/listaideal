@@ -115,6 +115,22 @@ create table if not exists public.list_messages (
   created_at timestamptz not null default now()
 );
 
+-- One row per (list, guest name): a guest confirms attendance and a headcount
+-- (including themselves). Deliberately independent of Selection and Message —
+-- none of the three share a key, so the same person may be typed differently
+-- across them; that's an accepted wrinkle, not a bug (see FUNCTIONAL_SPEC.MD).
+create table if not exists public.rsvps (
+  id           uuid        primary key default gen_random_uuid(),
+  list_id      uuid        not null references public.lists(id) on delete cascade,
+  guest_name   text        not null check (char_length(btrim(guest_name)) > 0),
+  is_attending boolean     not null,
+  guest_count  integer     not null default 1,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now(),
+  check (guest_count between 0 and 20),
+  check ((is_attending and guest_count >= 1) or (not is_attending and guest_count = 0))
+);
+
 -- ── Indexes ──────────────────────────────────────────────────────────────────
 
 create index if not exists gifts_list_id_idx      on public.gifts(list_id);
@@ -133,6 +149,9 @@ create index if not exists list_messages_visible_idx
   on public.list_messages(list_id, created_at desc)
   where is_hidden = false;
 
+create unique index if not exists rsvps_list_guest_idx on public.rsvps(list_id, lower(guest_name));
+create index if not exists rsvps_list_id_idx on public.rsvps(list_id, created_at desc);
+
 -- ── Row-Level Security ────────────────────────────────────────────────────────
 
 alter table public.lists          enable row level security;
@@ -140,6 +159,7 @@ alter table public.gifts          enable row level security;
 alter table public.selections     enable row level security;
 alter table public.gift_categories enable row level security;
 alter table public.list_messages  enable row level security;
+alter table public.rsvps          enable row level security;
 
 -- Lists: owners manage their own lists
 create policy "owners_manage_lists" on public.lists
@@ -196,6 +216,18 @@ create policy "owners_manage_list_messages" on public.list_messages
     )
   );
 
+-- RSVPs: owners read RSVPs on their own lists. No anon policy — the public
+-- page/action writes via the service-role client through upsert_rsvp() below.
+create policy "owners_manage_rsvps" on public.rsvps
+  for all
+  using (
+    exists (
+      select 1 from public.lists
+      where lists.id = rsvps.list_id
+        and lists.owner_id = auth.uid()
+    )
+  );
+
 -- ── Atomic slot-claim function ───────────────────────────────────────────────
 -- Called server-side with the service role key; the FOR UPDATE lock prevents
 -- two concurrent guests from both taking the last slot of a gift.
@@ -238,5 +270,41 @@ begin
   returning id into v_new_id;
 
   return jsonb_build_object('success', true, 'id', v_new_id);
+end;
+$$;
+
+-- ── Atomic RSVP upsert function ──────────────────────────────────────────────
+-- Called server-side with the service role key. ON CONFLICT does the
+-- find-or-update in one statement, so there is no client-visible race window
+-- between checking for an existing RSVP and writing one (unlike a
+-- fetch-then-match-in-JS approach, which would need a retry-on-conflict path).
+
+create or replace function public.upsert_rsvp(
+  p_list_id      uuid,
+  p_guest_name   text,
+  p_is_attending boolean,
+  p_guest_count  integer
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_row public.rsvps;
+begin
+  insert into public.rsvps (list_id, guest_name, is_attending, guest_count)
+  values (p_list_id, p_guest_name, p_is_attending, p_guest_count)
+  on conflict (list_id, (lower(guest_name)))
+  do update set is_attending = excluded.is_attending,
+                guest_count  = excluded.guest_count,
+                updated_at   = now()
+  returning * into v_row;
+
+  return jsonb_build_object(
+    'guest_name', v_row.guest_name,
+    'is_attending', v_row.is_attending,
+    'guest_count', v_row.guest_count
+  );
 end;
 $$;

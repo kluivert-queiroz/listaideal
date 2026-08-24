@@ -61,11 +61,13 @@ function useCarouselScrollState(api: CarouselApi) {
 
   const canScrollPrev = React.useSyncExternalStore(
     subscribe,
-    () => api?.canScrollPrev() ?? false
+    () => api?.canScrollPrev() ?? false,
+    () => false
   )
   const canScrollNext = React.useSyncExternalStore(
     subscribe,
-    () => api?.canScrollNext() ?? false
+    () => api?.canScrollNext() ?? false,
+    () => false
   )
 
   return { canScrollPrev, canScrollNext }

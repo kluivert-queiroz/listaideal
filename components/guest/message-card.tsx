@@ -19,20 +19,24 @@ export function MessageCard({ message, variant = 'carousel' }: Props) {
 
   return (
     <Card className="h-full rounded-3xl border-2 border-white bg-white/80 p-0 shadow-[0_16px_30px_-16px_rgba(79,88,59,0.22)]">
-      <CardContent className="space-y-3 p-5">
-        <span aria-hidden="true" className="font-script block text-4xl leading-none text-decor">
-          &ldquo;
-        </span>
-        <p
-          className={
-            isCarousel
-              ? 'line-clamp-5 text-sm leading-relaxed break-words text-foreground/80'
-              : 'whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80'
-          }
-        >
-          {body}
+      <CardContent className="flex h-full flex-col gap-3 p-5">
+        <div className="space-y-3">
+          <span aria-hidden="true" className="font-script block text-4xl leading-none text-decor">
+            &ldquo;
+          </span>
+          <p
+            className={
+              isCarousel
+                ? 'line-clamp-5 text-sm leading-relaxed break-words text-foreground/80'
+                : 'whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80'
+            }
+          >
+            {body}
+          </p>
+        </div>
+        <p className="font-script mt-auto text-right text-2xl leading-none text-primary">
+          {message.guest_name}
         </p>
-        <p className="font-script text-2xl leading-none text-primary">{message.guest_name}</p>
       </CardContent>
     </Card>
   )

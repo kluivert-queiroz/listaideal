@@ -76,7 +76,7 @@ export default async function GuestListPage({
       <div className="decor-arch" aria-hidden="true" />
       <div className="decor-hem" aria-hidden="true" />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-4 pb-72">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 pb-2 md:pb-16">
         {/* Hero */}
         <header className="text-center pt-[150px] sm:pt-[210px] px-[6%] sm:px-[8%] pb-10 space-y-3">
           <p className="font-bold text-base sm:text-[1.05rem]">

@@ -130,9 +130,9 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
               const showHeadings = !(sections.length === 1 && sections[0].id === null)
 
               return sections.map((section) => (
-                <div key={section.id ?? 'uncategorized'} className="space-y-4">
+                <div key={section.id ?? 'uncategorized'} className="space-y-7 mt-14">
                   {showHeadings && (
-                    <h3 className="font-script text-[2rem] text-primary leading-none text-center">
+                    <h3 className="font-script text-[2.5rem] text-primary leading-none text-center">
                       {section.label}
                     </h3>
                   )}

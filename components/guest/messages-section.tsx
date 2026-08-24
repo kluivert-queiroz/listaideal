@@ -54,6 +54,7 @@ export function MessagesSection({ messages, total }: Props) {
         className="w-full rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Carrossel de mensagens dos convidados"
         tabIndex={0}
+        onMouseDown={(e) => e.preventDefault()}
         opts={{ align: 'start', loop: false }}
       >
         <CarouselContent className="py-2">

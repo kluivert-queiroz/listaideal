@@ -33,13 +33,13 @@ export function LoginForm() {
             </Alert>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="identifier">Usuário ou e-mail</Label>
             <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="voce@exemplo.com"
-              autoComplete="email"
+              id="identifier"
+              name="identifier"
+              type="text"
+              placeholder="seu_usuario ou voce@exemplo.com"
+              autoComplete="username"
               required
             />
           </div>

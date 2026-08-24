@@ -44,6 +44,19 @@ export function RegisterForm() {
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="username">Usuário</Label>
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="seu_usuario"
+              autoComplete="username"
+              minLength={3}
+              maxLength={20}
+              required
+            />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="password">Senha</Label>
             <Input
               id="password"

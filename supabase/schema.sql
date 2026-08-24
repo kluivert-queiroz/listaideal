@@ -28,6 +28,29 @@ $$;
 
 -- ── Tables ──────────────────────────────────────────────────────────────────
 
+-- One row per auth user, holding the username used for login. Kept separate
+-- from auth.users (which Supabase Auth owns) rather than folded into user
+-- metadata, so it can carry its own RLS policy and a case-insensitive unique
+-- index. The email lives only in auth.users — this table never duplicates it,
+-- so there is nothing here to drift when a user changes their email.
+create table if not exists public.profiles (
+  id         uuid        primary key references auth.users(id) on delete cascade,
+  username   text        not null check (username ~ '^[a-zA-Z0-9_.]{3,20}$'),
+  created_at timestamptz not null default now()
+);
+
+create unique index if not exists profiles_username_idx on public.profiles(lower(username));
+
+alter table public.profiles enable row level security;
+
+-- Each user can see and manage only their own profile row. The username ->
+-- user_id lookup needed at login time (before a session exists) goes through
+-- the service-role client instead, which bypasses RLS entirely.
+create policy "users_manage_own_profile" on public.profiles
+  for all
+  using (id = auth.uid())
+  with check (id = auth.uid());
+
 create table if not exists public.lists (
   id            uuid        primary key default gen_random_uuid(),
   owner_id      uuid        not null references auth.users(id) on delete cascade,

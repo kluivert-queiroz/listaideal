@@ -64,6 +64,17 @@ function buildListPayload(data: z.infer<typeof listSchema>) {
   }
 }
 
+const SLUG_REGEX = /^[a-z0-9-]{3,30}$/
+const UNIQUE_VIOLATION = '23505'
+
+const slugSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(SLUG_REGEX, 'O link deve ter 3-30 caracteres (letras minúsculas, números ou "-").'),
+})
+
 async function getAuthenticatedUser() {
   const supabase = await createClient()
   const {
@@ -119,6 +130,37 @@ export async function updateListAction(
   // Editing a list must be reflected immediately on the guest-facing page.
   revalidatePath(`/list/${data.share_token}`)
   redirect(`/lists/${listId}`)
+}
+
+export async function updateListSlugAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const listId = formData.get('list_id') as string
+  const oldSlug = formData.get('current_slug') as string
+  if (!listId) return { error: 'ID da lista ausente.' }
+
+  const parsed = slugSchema.safeParse({ slug: formData.get('slug') })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  const { supabase, user } = await getAuthenticatedUser()
+
+  const { error } = await supabase
+    .from('lists')
+    .update({ share_token: parsed.data.slug })
+    .eq('id', listId)
+    .eq('owner_id', user.id)
+
+  if (error) {
+    if (error.code === UNIQUE_VIOLATION) return { error: 'Este link já está em uso.' }
+    return { error: error.message }
+  }
+
+  revalidatePath(`/lists/${listId}`)
+  if (oldSlug) revalidatePath(`/list/${oldSlug}`)
+  revalidatePath(`/list/${parsed.data.slug}`)
+
+  return { success: 'Link atualizado!' }
 }
 
 export async function toggleListStatusAction(formData: FormData) {

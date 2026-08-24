@@ -64,7 +64,8 @@ create table if not exists public.lists (
   venue_name    text        check (venue_name is null or char_length(venue_name) <= 160),
   venue_address text        check (venue_address is null or char_length(venue_address) <= 200),
   venue_city    text        check (venue_city is null or char_length(venue_city) <= 120),
-  share_token   text        not null unique default gen_slug(),
+  share_token   text        not null unique default gen_slug()
+                            check (share_token ~ '^[a-z0-9-]{3,30}$'),
   status        text        not null default 'open' check (status in ('open', 'closed')),
   created_at    timestamptz not null default now()
 );

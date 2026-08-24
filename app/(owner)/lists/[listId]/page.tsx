@@ -11,6 +11,7 @@ import { GiftRow } from '@/components/gifts/gift-row'
 import { GiftForm } from '@/components/gifts/gift-form'
 import { CategoryManager } from '@/components/categories/category-manager'
 import { CopyLink } from '@/components/lists/copy-link'
+import { EditSlugForm } from '@/components/lists/edit-slug-form'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -172,6 +173,7 @@ export default async function ListPage({
         <p className="text-xs text-muted-foreground">
           Envie este <Link className='text-blue-500' href={shareUrl} target='_blank' rel='noopener noreferrer'>link</Link> aos seus convidados — eles não precisam de conta.
         </p>
+        <EditSlugForm listId={listId} slug={list.share_token} sitePrefix={`${getSiteUrl()}/list/`} />
       </div>
 
       <Separator />

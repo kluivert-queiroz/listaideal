@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sanitizeUserText } from '@/lib/text'
+import { writeGuestReceipt } from '@/lib/guest-receipt'
 
 const submitSchema = z.object({
   guest_name: z.string().trim().min(1, 'Seu nome é obrigatório.').max(200),
@@ -12,11 +13,17 @@ const submitSchema = z.object({
   gift_ids: z.array(z.string().uuid()).min(1, 'Selecione pelo menos um presente.'),
 })
 
+export type ReservedGift = {
+  id: string
+  name: string
+  description: string | null
+}
+
 export type SubmitSelectionsResult =
   | { error: string }
   | {
       guest_name: string
-      reserved: string[]
+      reserved: ReservedGift[]
       unavailable: string[]
     }
 
@@ -55,7 +62,7 @@ export async function submitSelectionsAction(
 
   const { data: gifts } = await supabase
     .from('gifts')
-    .select('id, name')
+    .select('id, name, description')
     .eq('list_id', list.id)
     .in('id', gift_ids)
 
@@ -63,8 +70,8 @@ export async function submitSelectionsAction(
     return { error: 'Um ou mais presentes selecionados são inválidos.' }
   }
 
-  const giftNameById = Object.fromEntries(gifts.map((g) => [g.id, g.name]))
-  const reserved: string[] = []
+  const giftById = Object.fromEntries(gifts.map((g) => [g.id, g]))
+  const reserved: ReservedGift[] = []
   const unavailable: string[] = []
 
   // Claim slots one by one — each call is atomic via FOR UPDATE inside the function
@@ -75,9 +82,13 @@ export async function submitSelectionsAction(
     })
 
     if (error || !data?.success) {
-      unavailable.push(giftNameById[giftId])
+      unavailable.push(giftById[giftId].name)
     } else {
-      reserved.push(giftNameById[giftId])
+      reserved.push({
+        id: giftId,
+        name: giftById[giftId].name,
+        description: giftById[giftId].description,
+      })
     }
   }
 
@@ -98,6 +109,14 @@ export async function submitSelectionsAction(
     // the form's step state re-renders with the new message, so the guest who
     // just submitted sees it appear. Literal path, so `type` is omitted.
     revalidatePath(`/list/${list.share_token}`)
+  }
+
+  if (reserved.length > 0) {
+    await writeGuestReceipt(
+      list.share_token,
+      guest_name,
+      reserved.map((g) => g.id)
+    )
   }
 
   return { guest_name, reserved, unavailable }

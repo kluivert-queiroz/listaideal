@@ -73,10 +73,16 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
         {result.reserved.length > 0 && (
           <div className="mx-auto max-w-sm text-left">
             <p className="mb-2 text-sm font-medium">Você reservou:</p>
-            <ul className="space-y-1 text-sm text-muted-foreground">
-              {result.reserved.map((name) => (
-                <li key={name} className="flex items-center gap-2">
-                  <span className="text-success">✓</span> {name}
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              {result.reserved.map((gift) => (
+                <li key={gift.id} className="flex items-start gap-2">
+                  <span className="text-success mt-0.5">✓</span>
+                  <span>
+                    <span className="block text-foreground">{gift.name}</span>
+                    {gift.description && (
+                      <span className="block text-xs">{gift.description}</span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -96,6 +102,12 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
               ))}
             </ul>
           </div>
+        )}
+
+        {result.reserved.length > 0 && (
+          <p className="text-xs text-muted-foreground">
+            Guardamos isso neste aparelho — se preferir, tire um print desta tela.
+          </p>
         )}
       </div>
     )
@@ -254,7 +266,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
           )}
 
           {/* Selected gifts summary */}
-          <Card className="bg-secondary/40 border-secondary rounded-3xl">
+          <Card className="bg-secondary/40 border-secondary rounded-3xl pb-12">
             <CardContent className="space-y-2 p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Seus presentes
@@ -263,16 +275,23 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
                 {selectedGifts.map((g) => (
                   <li
                     key={g.id}
-                    className="flex items-center justify-between gap-2 text-sm"
+                    className="flex items-start justify-between gap-2 text-sm"
                   >
-                    <span>{g.name}</span>
+                    <span>
+                      <span className="block">{g.name}</span>
+                      {g.description && (
+                        <span className="block text-xs text-muted-foreground">
+                          {g.description}
+                        </span>
+                      )}
+                    </span>
                     <button
                       type="button"
                       onClick={() => {
                         toggle(g.id)
                         if (selectedIds.size <= 1) setStep('select')
                       }}
-                      className="text-xs text-muted-foreground hover:text-destructive"
+                      className="shrink-0 text-xs text-muted-foreground hover:text-destructive"
                     >
                       Remover
                     </button>
@@ -304,7 +323,7 @@ export function SelectionForm({ gifts, categories, listToken, honoreeNames = nul
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pb-36">
             <Button
               type="button"
               variant="outline"

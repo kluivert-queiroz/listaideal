@@ -3,9 +3,11 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { SelectionForm } from '@/components/guest/selection-form'
 import { RsvpForm } from '@/components/guest/rsvp-form'
 import { MessagesSection } from '@/components/guest/messages-section'
+import { GuestReceiptBanner } from '@/components/guest/guest-receipt-banner'
 import { SleepingBee } from '@/components/decor/sleeping-bee'
 import { BeeDivider } from '@/components/decor/bee-divider'
 import { MESSAGES_FETCH_LIMIT } from '@/lib/messages'
+import { readGuestReceipt } from '@/lib/guest-receipt'
 import { HERO_HEADLINE_DEFAULT, HERO_KICKER_DEFAULT } from '@/lib/copy'
 import { renderInlineMarkup } from '@/lib/rich-text'
 import type { GiftWithSlots, PublicMessage } from '@/lib/types'
@@ -33,6 +35,16 @@ export default async function GuestListPage({
     .order('display_order', { ascending: true })
 
   const giftIds = (gifts ?? []).map((g) => g.id)
+
+  // Device-local receipt (display hint only, never authoritative — see
+  // lib/guest-receipt.ts). Resolved against the list's actual current gifts so
+  // a stale/foreign cookie or a since-removed gift never shows.
+  const receipt = await readGuestReceipt()
+  const reservedGifts = receipt
+    ? (gifts ?? [])
+        .filter((g) => receipt.giftIds.includes(g.id))
+        .map((g) => ({ id: g.id, name: g.name, description: g.description }))
+    : []
 
   const { data: categories } = await supabase
     .from('gift_categories')
@@ -131,6 +143,10 @@ export default async function GuestListPage({
         </header>
 
         <BeeDivider />
+
+        {reservedGifts.length > 0 && receipt && (
+          <GuestReceiptBanner guestName={receipt.guestName} gifts={reservedGifts} />
+        )}
 
         {/* RSVP — always visible regardless of list.status, same tier as messages
             below: confirming attendance is event-logistics, not gift-inventory,

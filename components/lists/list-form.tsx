@@ -40,7 +40,6 @@ export function ListForm({ action, defaultValues, listId, submitLabel }: Props) 
           <Input
             id="title"
             name="title"
-            placeholder="Chá de bebê da Melissa"
             defaultValue={defaultValues?.title ?? ''}
             required
           />
@@ -51,7 +50,6 @@ export function ListForm({ action, defaultValues, listId, submitLabel }: Props) 
           <Input
             id="honoree_names"
             name="honoree_names"
-            placeholder="Melissa"
             defaultValue={defaultValues?.honoree_names ?? ''}
           />
         </div>
@@ -115,7 +113,6 @@ export function ListForm({ action, defaultValues, listId, submitLabel }: Props) 
           <Input
             id="venue_name"
             name="venue_name"
-            placeholder="Salão de Festas – Condomínio Paisagem Tamboré"
             defaultValue={defaultValues?.venue_name ?? ''}
           />
         </div>
@@ -125,7 +122,6 @@ export function ListForm({ action, defaultValues, listId, submitLabel }: Props) 
           <Input
             id="venue_address"
             name="venue_address"
-            placeholder="Av. Marcos Penteado de Ulhôa Rodrigues, 2113"
             defaultValue={defaultValues?.venue_address ?? ''}
           />
         </div>
@@ -135,7 +131,6 @@ export function ListForm({ action, defaultValues, listId, submitLabel }: Props) 
           <Input
             id="venue_city"
             name="venue_city"
-            placeholder="Tamboré · Santana de Parnaíba – SP"
             defaultValue={defaultValues?.venue_city ?? ''}
           />
         </div>

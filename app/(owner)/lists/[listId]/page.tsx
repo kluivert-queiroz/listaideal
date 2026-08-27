@@ -167,17 +167,6 @@ export default async function ListPage({
               {list.status === 'open' ? 'Fechar lista' : 'Reabrir lista'}
             </Button>
           </form>
-          <form action={deleteListAction}>
-            <input type="hidden" name="list_id" value={listId} />
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="text-destructive hover:text-destructive"
-            >
-              Excluir lista
-            </Button>
-          </form>
         </div>
       </div>
 

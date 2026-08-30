@@ -15,7 +15,7 @@ export default async function OwnerLayout({
   if (!user) redirect('/login')
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-1 flex-col">
       <Nav email={user.email ?? ''} />
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">{children}</main>
     </div>

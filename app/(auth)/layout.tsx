@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-harvest min-h-screen flex flex-col items-center justify-center px-4 py-10">
+    <div className="bg-harvest flex flex-1 flex-col items-center justify-center px-4 py-10">
       <Link
         href="/"
         className="font-script text-5xl mb-8 text-primary"

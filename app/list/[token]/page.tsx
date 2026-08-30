@@ -6,6 +6,7 @@ import { MessagesSection } from '@/components/guest/messages-section'
 import { GuestReceiptBanner } from '@/components/guest/guest-receipt-banner'
 import { SleepingBee } from '@/components/decor/sleeping-bee'
 import { BeeDivider } from '@/components/decor/bee-divider'
+import { PoweredBy } from '@/components/site-footer'
 import { MESSAGES_FETCH_LIMIT } from '@/lib/messages'
 import { readGuestReceipt } from '@/lib/guest-receipt'
 import { HERO_HEADLINE_DEFAULT, HERO_KICKER_DEFAULT } from '@/lib/copy'
@@ -85,7 +86,7 @@ export default async function GuestListPage({
   const messages: PublicMessage[] = messageRows ?? []
 
   return (
-    <div className="relative overflow-hidden bg-background min-h-screen">
+    <div className="relative flex-1 overflow-x-hidden bg-background">
       <div className="decor-arch" aria-hidden="true" />
       <div className="decor-hem" aria-hidden="true" />
 
@@ -184,6 +185,10 @@ export default async function GuestListPage({
             honoreeNames={list.honoree_names}
           />
         )}
+
+        <p className="pt-8 pb-28 text-center text-xs text-muted-foreground">
+          <PoweredBy />
+        </p>
       </div>
     </div>
   )

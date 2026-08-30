@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Quicksand, Geist_Mono, Great_Vibes, Cormorant_Garamond } from 'next/font/google'
+import { SiteFooter } from '@/components/site-footer'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -42,7 +43,8 @@ export default function RootLayout({
       className={`${quicksand.variable} ${geistMono.variable} ${greatVibes.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
+        <SiteFooter />
         <Toaster />
       </body>
     </html>
